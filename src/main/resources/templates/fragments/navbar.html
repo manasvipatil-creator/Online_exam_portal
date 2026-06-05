@@ -1,0 +1,286 @@
+<!-- 
+  ONLINE EXAM PORTAL - REUSABLE NAVIGATIONS FRAGMENT
+  Contains: Public Top Nav, Student Sidebar, Admin Sidebar, Dashboard Header
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+
+    <!-- 1. PUBLIC TOP NAVIGATION BAR (Home, Login, Register Pages) -->
+    <nav th:fragment="navbar-public" class="navbar navbar-expand-lg navbar-light fixed-top glass-nav py-3">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" th:href="@{/}" href="/">
+                <div class="bg-primary text-white d-flex align-items-center justify-content-center rounded-3" style="width: 38px; height: 38px;">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <span class="fw-bold tracking-tight text-gradient-primary" style="font-family: var(--font-heading); font-size: 1.3rem;">EXAMPORTAL</span>
+            </a>
+            
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#publicNavbar" aria-controls="publicNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="publicNavbar">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1 gap-lg-3">
+                    <li class="nav-item">
+                        <a class="nav-link fw-semibold" th:href="@{/#home}" href="/#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-semibold" th:href="@{/#about}" href="/#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-semibold" th:href="@{/#features}" href="/#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-semibold" th:href="@{/#contact}" href="/#contact">Contact</a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center gap-2">
+                    <a th:href="@{/student/login}" href="/student/login.html" class="btn btn-outline-primary px-4">Student Login</a>
+                    <a th:href="@{/student/register}" href="/student/register.html" class="btn btn-primary px-4">Register</a>
+                    <div class="vr mx-2 d-none d-lg-block text-gray-300"></div>
+                    <a th:href="@{/admin/login}" href="/admin/admin-login.html" class="btn btn-dark px-3" title="Admin Portal">
+                        <i class="fas fa-user-shield me-1"></i> Admin
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- 2. STUDENT DASHBOARD SIDEBAR -->
+    <div th:fragment="student-sidebar(activePage)" class="sidebar">
+        <div class="brand">
+            <a th:href="@{/}" href="/" class="text-white text-decoration-none d-flex align-items-center gap-2">
+                <div class="bg-primary text-white d-flex align-items-center justify-content-center rounded-3" style="width: 32px; height: 32px; font-size: 0.9rem;">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <span class="fw-bold" style="font-size: 1.1rem; letter-spacing: 0.5px;">EXAMPORTAL</span>
+            </a>
+        </div>
+        
+        <ul class="sidebar-nav">
+            <li class="nav-item">
+                <a th:href="@{/student/dashboard}" href="/student/dashboard.html" 
+                   th:classappend="${activePage == 'dashboard'} ? 'active' : ''" class="nav-link">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/student/exams}" href="/student/exam-list.html" 
+                   th:classappend="${activePage == 'exams'} ? 'active' : ''" class="nav-link">
+                    <i class="fas fa-book-open"></i>
+                    <span>Available Exams</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/student/profile}" href="/student/profile.html" 
+                   th:classappend="${activePage == 'profile'} ? 'active' : ''" class="nav-link">
+                    <i class="fas fa-user-cog"></i>
+                    <span>My Profile</span>
+                </a>
+            </li>
+        </ul>
+        
+       <div class="sidebar-footer">
+    <div class="d-flex align-items-center justify-content-between">
+
+        <div class="d-flex align-items-center gap-2">
+
+            <div class="avatar rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+                 style="width: 32px; height: 32px; font-size: 0.8rem; font-weight: 700;">
+
+                <span th:text="${#strings.substring(session.student.fullName,0,1)}">
+                    S
+                </span>
+
+            </div>
+
+            <div style="line-height: 1.2;">
+
+                <span class="d-block text-white fw-semibold"
+                      style="font-size: 0.8rem;"
+                      th:text="${session.student.fullName}">
+                    Student Name
+                </span>
+
+                <span class="d-block text-gray-500"
+                      style="font-size: 0.7rem;">
+                    Student
+                </span>
+
+            </div>
+
+        </div>
+
+        <a th:href="@{/logout}"
+           class="text-danger"
+           title="Logout">
+            <i class="fas fa-sign-out-alt"></i>
+        </a>
+
+    </div>
+</div>
+    </div>
+
+
+    <!-- 3. ADMIN DASHBOARD SIDEBAR -->
+    <div th:fragment="admin-sidebar(activePage)" class="sidebar">
+        <div class="brand">
+            <a th:href="@{/}" href="/" class="text-white text-decoration-none d-flex align-items-center gap-2">
+                <div class="bg-primary text-white d-flex align-items-center justify-content-center rounded-3" style="width: 32px; height: 32px; font-size: 0.9rem;">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <span class="fw-bold" style="font-size: 1.1rem; letter-spacing: 0.5px;">EXAMPORTAL</span>
+                <span class="badge bg-danger ms-auto" style="font-size: 0.65rem;">ADMIN</span>
+            </a>
+        </div>
+        
+        <ul class="sidebar-nav">
+            <li class="nav-item">
+                <a th:href="@{/admin/dashboard}" href="/admin/admin-dashboard.html" 
+                   th:classappend="${activePage == 'dashboard'} ? 'active' : ''" class="nav-link">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/admin/exams}" href="/admin/manage-exams.html" 
+                   th:classappend="${activePage == 'exams'} ? 'active' : ''" class="nav-link">
+                    <i class="fas fa-folder-plus"></i>
+                    <span>Manage Exams</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/admin/manage-questions}" 
+                   th:classappend="${activePage == 'questions'} ? 'active' : ''" class="nav-link">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Manage Questions</span>
+                </a>
+            </li>
+         
+            <li class="nav-item">
+                <a th:href="@{/admin/manage-students}" href="/admin/manage-students.html" 
+                   th:classappend="${activePage == 'students'} ? 'active' : ''" class="nav-link">
+                    <i class="fas fa-users-cog"></i>
+                    <span>Manage Students</span>
+                </a>
+            </li>
+          <li class="nav-item">
+    <a th:href="@{/admin/manage-results}"
+       th:classappend="${activePage == 'results'} ? 'active' : ''"
+       class="nav-link">
+        <i class="fas fa-poll"></i>
+        <span>Manage Results</span>
+    </a>
+</li>
+        </ul>
+        
+        <div class="sidebar-footer">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="avatar rounded-circle bg-danger text-white d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-size: 0.8rem; font-weight: 700;">
+                        AD
+                    </div>
+                    <div style="line-height: 1.2;">
+                        <span class="d-block text-white fw-semibold" style="font-size: 0.8rem;">Admin User</span>
+                        <span class="d-block text-gray-500" style="font-size: 0.7rem;">System Owner</span>
+                    </div>
+                </div>
+                <a th:href="@{/admin/login?logout}" href="/admin/admin-login.html" class="text-danger" title="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 4. DASHBOARD TOP NAVIGATION PANEL (With Search, Notification & Avatar) -->
+    <header th:fragment="dashboard-header(title)" class="dashboard-navbar">
+        <div class="d-flex align-items-center gap-3">
+            <button class="sidebar-toggle btn p-0 text-dark">
+                <i class="fas fa-bars"></i>
+            </button>
+            <h4 class="mb-0 fw-bold d-none d-md-block" th:text="${title}" text="Dashboard Overview">Dashboard Overview</h4>
+        </div>
+        
+        <div class="d-flex align-items-center gap-3">
+            <!-- Search Widget -->
+            <div class="search-widget d-none d-lg-block position-relative">
+                <input type="text" class="form-control bg-light border-0 rounded-pill px-4 py-2" placeholder="Search exams, users..." style="font-size: 0.85rem; width: 240px; text-indent: 10px;">
+                <i class="fas fa-search position-absolute text-gray-400" style="left: 15px; top: 13px; font-size: 0.85rem;"></i>
+            </div>
+            
+            <!-- Quick Notifications Icon -->
+            <div class="dropdown">
+    <button class="btn btn-light rounded-circle p-2 position-relative"
+            type="button"
+            data-bs-toggle="dropdown">
+
+        <i class="far fa-bell text-gray-600"
+           style="font-size: 1.1rem;"></i>
+
+        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+    </button>
+
+    <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg mt-2 p-2"
+        style="width: 300px; border-radius: 12px;">
+
+        <li>
+            <h6 class="dropdown-header text-dark fw-bold">
+                Recent Notifications
+            </h6>
+        </li>
+
+        <li><hr class="dropdown-divider"></li>
+
+        <li>
+            <a class="dropdown-item rounded-3 py-2 px-3 mb-1" href="#">
+                <div class="fw-semibold text-dark">
+                    Welcome,
+                    <span th:text="${session.student.fullName}">
+                        Student
+                    </span>
+                </div>
+
+                <small class="text-gray-400">
+                    Logged in successfully
+                </small>
+            </a>
+        </li>
+
+        <li>
+            <a class="dropdown-item rounded-3 py-2 px-3 mb-1" href="#">
+                <div class="fw-semibold text-dark">
+                    New Exam Available
+                </div>
+
+                <small class="text-gray-400">
+                    Check available examinations
+                </small>
+            </a>
+        </li>
+
+        <li>
+            <a class="dropdown-item rounded-3 py-2 px-3" href="#">
+                <div class="fw-semibold text-dark">
+                    Profile Updated
+                </div>
+
+                <small class="text-gray-400">
+                    Your profile information is up to date
+                </small>
+            </a>
+        </li>
+    </ul>
+</div>            
+            <!-- Profile Action Link -->
+            <div class="vr text-gray-300 mx-1"></div>
+            <span class="text-gray-600 fw-medium d-none d-sm-block text-capitalize" th:text="${session.student.fullName}">Student Name</span>
+        </div>
+    </header>
+
+</body>
+</html>

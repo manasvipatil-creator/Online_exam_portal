@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrator Entrance - Online Exam Portal</title>
+    <!-- Fragments Styles -->
+    <th:block th:replace="~{fragments/footer :: styles}"></th:block>
+</head>
+<body style="background: radial-gradient(circle at center, #1e293b, #0f172a); min-height: 100vh;">
+
+    <!-- Public Navbar -->
+    <div th:replace="~{fragments/navbar :: navbar-public}"></div>
+
+    <!-- Admin Login Main Panel -->
+    <div class="container d-flex align-items-center justify-content-center" style="min-height: 100vh; padding-top: 6rem; padding-bottom: 3rem;">
+        <div class="card p-4 p-md-5 w-100 border-0" style="max-width: 480px; border-radius: 24px; background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: var(--shadow-xl);">
+            
+            <div class="text-center mb-4">
+                <div class="bg-danger text-white rounded-3 d-inline-flex align-items-center justify-content-center mb-3 shadow-lg" style="width: 54px; height: 54px;">
+                    <i class="fas fa-user-shield fs-4"></i>
+                </div>
+                <h3 class="fw-bold mb-1 text-white" style="font-family: var(--font-heading);">Admin Portal</h3>
+                <p class="text-gray-400" style="font-size: 0.9rem;">Sign in using authorized system management credentials.</p>
+            </div>
+            
+            <!-- Global error display (Thymeleaf placeholder for invalid admin logins) -->
+            <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show border-0 rounded-3 mb-4 text-white" style="background-color: rgba(239, 68, 68, 0.2);" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <span>Access denied. Invalid credentials.</span>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            
+            <!-- Authentication Form -->
+            <form th:action="@{/admin/login}" action="/admin/admin-dashboard.html" method="POST" class="needs-validation" novalidate>
+                
+                <!-- Email Address -->
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control bg-dark border-secondary text-white rounded-3" id="adminEmail" name="email" placeholder="admin@examportal.edu" required style="border-color: rgba(255,255,255,0.15) !important;">
+                    <label for="adminEmail" class="text-gray-400">Admin Email</label>
+                    <div class="invalid-feedback text-danger">
+                        Please provide your administrative email.
+                    </div>
+                </div>
+                
+                <!-- Password -->
+                <div class="form-floating mb-4">
+                    <input type="password" class="form-control bg-dark border-secondary text-white rounded-3" id="adminPassword" name="password" placeholder="Password" required style="border-color: rgba(255,255,255,0.15) !important;">
+                    <label for="adminPassword" class="text-gray-400">Secure Access Key</label>
+                    <div class="invalid-feedback text-danger">
+                        Please enter your secure access key.
+                    </div>
+                </div>
+                
+                <!-- Login Submission Button -->
+                <button class="btn btn-danger btn-lg w-100 py-2.5 rounded-3 mb-3 fw-semibold shadow-lg" type="submit" style="background-color: var(--danger); border-color: var(--danger);">
+                    Access Console <i class="fas fa-sign-in-alt ms-1"></i>
+                </button>
+                
+                <div class="text-center mt-3 border-top border-secondary pt-3" style="border-color: rgba(255, 255, 255, 0.08) !important;">
+                    <a th:href="@{/student/login}" href="/student/login.html" class="fw-semibold text-primary text-decoration-none" style="font-size: 0.85rem;">
+                        <i class="fas fa-graduation-cap me-1"></i> Switch to Student Sign In
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts Fragment -->
+    <th:block th:replace="~{fragments/footer :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile & Settings - Online Exam Portal</title>
+    <!-- Fragments Styles -->
+    <th:block th:replace="~{fragments/footer :: styles}"></th:block>
+</head>
+<body>
+
+    <div class="dashboard-wrapper">
+        <!-- Sidebar Navigation (Active: 'profile') -->
+        <div th:replace="~{fragments/navbar :: student-sidebar('profile')}"></div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Dashboard Header -->
+            <header th:replace="~{fragments/navbar :: dashboard-header('Student Profile')}"></header>
+            
+            <div class="content-body">
+                <div class="row g-4">
+                    <!-- LEFT COLUMN: AVATAR CARD & BIO -->
+                    <div class="col-lg-4">
+                        <div class="card card-premium p-4 border-0 mb-4 bg-white text-center">
+                            <div class="position-relative d-inline-block mx-auto mb-3">
+                                <div class="avatar rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto" style="width: 90px; height: 90px; font-size: 2.25rem; font-weight: 700; box-shadow: var(--shadow-md);">
+                                    SP
+                                </div>
+                                <span class="position-absolute bottom-0 end-0 bg-success border border-white rounded-circle p-2" title="Online Status"></span>
+                            </div>
+                            
+                            <h5 class="fw-bold text-dark mb-1"
+    th:text="${student != null ? student.fullName : 'Student Name'}">
+</h5>
+                            <span class="text-gray-400 d-block mb-3"
+							      style="font-size: 0.85rem;"
+							      th:text="${student.email}">
+							</span>
+                            <span class="badge bg-primary-light text-primary rounded-pill px-3 py-1.5 fw-semibold" style="font-size: 0.8rem;">B.Tech Computer Science</span>
+                            
+                            <div class="border-top border-gray-100 mt-4 pt-4 text-start" style="font-size: 0.85rem;">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-gray-500">Student ID:</span>
+                                    <span class="fw-bold text-dark"><span th:text="'STU-' + ${student.id}"></span></span>
+                                </div>
+                              
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-gray-500">Overall CGPA:</span>
+                                    <span class="fw-bold text-success">8.8 / 10.0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- RIGHT COLUMN: MULTI-TAB SETTINGS PANEL -->
+                    <div class="col-lg-8">
+                        <div class="card card-premium p-4 border-0 bg-white">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-pills mb-4 gap-2 border-bottom border-gray-100 pb-3" id="profileTabs" role="tablist" style="font-size: 0.9rem;">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active px-4 rounded-3" id="info-tab" data-bs-toggle="tab" data-bs-target="#info-pane" type="button" role="tab" aria-controls="info-pane" aria-selected="true">
+                                        <i class="far fa-user-circle me-1"></i> Profile Information
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link px-4 rounded-3" id="security-tab" data-bs-toggle="tab" data-bs-target="#security-pane" type="button" role="tab" aria-controls="security-pane" aria-selected="false">
+                                        <i class="fas fa-shield-alt me-1"></i> Change Password
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link px-4 rounded-3" id="history-tab" data-bs-toggle="tab" data-bs-target="#history-pane" type="button" role="tab" aria-controls="history-pane" aria-selected="false">
+                                        <i class="fas fa-history me-1"></i> Exam History
+                                    </button>
+                                </li>
+                            </ul>
+                            
+                            <!-- Tab content -->
+                            <div class="tab-content" id="profileTabsContent">
+                                
+                                <!-- Tab 1: Profile Information Update Form -->
+                                <div class="tab-pane fade show active" id="info-pane" role="tabpanel" aria-labelledby="info-tab">
+                                    <!-- Thymeleaf post response indicator -->
+                                    <div th:if="${infoSuccess}" class="alert alert-success rounded-3 mb-4" role="alert">
+                                        <i class="fas fa-check-circle me-2"></i> Profile information updated successfully!
+                                    </div>
+                                    
+                                    <form th:action="@{/student/profile/update}" action="/student/profile.html" method="POST">
+                                        <div class="row g-3">
+                                           <div class="col-md-6">
+											    <label class="form-label fw-semibold text-dark">
+											        Full Name
+											    </label>
+											
+											    <input type="text"
+											           class="form-control py-2.5 rounded-3"
+											           name="fullName"
+											           th:value="${student.fullName}"
+											           required>
+											</div>
+                                           <div class="col-md-6">
+										    <label class="form-label fw-semibold text-dark">
+										        Email Address
+										    </label>
+										
+										    <input type="email"
+										           class="form-control py-2.5 rounded-3"
+										           name="email"
+										           th:value="${student.email}"
+										           readonly>
+										
+										    <small class="text-gray-400">
+										        Academic email cannot be modified
+										    </small>
+										</div>
+										                                         <div class="col-md-6">
+										    <label class="form-label fw-semibold text-dark">
+										        Mobile Number
+										    </label>
+										
+										    <input type="tel"
+										           class="form-control py-2.5 rounded-3"
+										           name="mobileNumber"
+										           th:value="${student.mobileNumber}"
+										           required>
+										</div>
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold text-dark">Department / Course</label>
+                                                <select class="form-select py-2.5 rounded-3">
+                                                    <option selected>Computer Science & Engineering</option>
+                                                    <option>Electronics & Communication</option>
+                                                    <option>Mechanical Engineering</option>
+                                                    <option>Information Technology</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-12 mt-4 text-end">
+                                                <button type="submit" class="btn btn-primary px-4 py-2.5 rounded-3 fw-semibold">
+                                                    Save Changes <i class="fas fa-save ms-1"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                
+                                <!-- Tab 2: Change Password Panel -->
+                                <div class="tab-pane fade" id="security-pane" role="tabpanel" aria-labelledby="security-tab">
+                                    <div th:if="${pwdSuccess}" class="alert alert-success rounded-3 mb-4" role="alert">
+                                        <i class="fas fa-check-circle me-2"></i> Credentials updated! Please use new password next time.
+                                    </div>
+                                    <div th:if="${pwdError}" class="alert alert-danger rounded-3 mb-4" role="alert">
+                                        <i class="fas fa-exclamation-triangle me-2"></i> <span th:text="${pwdError}">Current password incorrect.</span>
+                                    </div>
+                                    
+                                    <form th:action="@{/student/profile/password}" action="/student/profile.html" method="POST" class="needs-validation" novalidate>
+                                        <div class="row g-3">
+                                            <div class="col-12">
+                                                <label class="form-label fw-semibold text-dark">Current Password</label>
+                                                <input type="password" class="form-control py-2.5 rounded-3" name="currentPassword" required>
+                                                <div class="invalid-feedback">Please write your current password.</div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold text-dark">New Password</label>
+                                                <input type="password" class="form-control py-2.5 rounded-3" id="password" name="newPassword" required minlength="6">
+                                                <div class="invalid-feedback">Password must be at least 6 characters.</div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold text-dark">Confirm New Password</label>
+                                                <input type="password" class="form-control py-2.5 rounded-3" id="confirmPassword" name="confirmNewPassword" required>
+                                                <div class="invalid-feedback">Passwords must match.</div>
+                                            </div>
+                                            <div class="col-12 mt-4 text-end">
+                                                <button type="submit" class="btn btn-primary px-4 py-2.5 rounded-3 fw-semibold">
+                                                    Update Security Key <i class="fas fa-key ms-1"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                
+                                <!-- Tab 3: Detailed Historical Examination Records Table -->
+                                <div class="tab-pane fade" id="history-pane" role="tabpanel" aria-labelledby="history-tab">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover align-middle mb-0">
+                                            <thead class="table-light text-gray-500" style="font-size: 0.85rem;">
+                                                <tr>
+                                                    <th>Exam Code</th>
+                                                    <th>Subject Name</th>
+                                                    <th>Date Attempted</th>
+                                                    <th>Score</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody style="font-size: 0.9rem;">
+                                                <!-- Dynamic loops fallbacks -->
+                                                <tr th:each="hist : ${historyLog}">
+                                                    <td class="fw-semibold text-primary" th:text="${hist.code}">CS-101</td>
+                                                    <td class="fw-bold text-dark" th:text="${hist.name}">Introduction to Java</td>
+                                                    <td th:text="${hist.date}">2026-05-28</td>
+                                                    <td th:text="${hist.scoreString}">45 / 50</td>
+                                                    <td>
+                                                        <span class="badge bg-success-light text-success rounded-pill px-2.5 py-1" th:if="${hist.passed}">Passed</span>
+                                                        <span class="badge bg-danger-light text-danger rounded-pill px-2.5 py-1" th:unless="${hist.passed}">Failed</span>
+                                                    </td>
+                                                </tr>
+                                                <!-- Fallback Mock Logs -->
+                                                <tr th:if="${historyLog == null}">
+                                                    <td class="fw-semibold text-primary">CS-402</td>
+                                                    <td class="fw-bold text-dark">Core Java Programming</td>
+                                                    <td>May 28, 2026</td>
+                                                    <td>45 / 50 (90%)</td>
+                                                    <td><span class="badge bg-success-light text-success rounded-pill px-2.5 py-1">Passed</span></td>
+                                                </tr>
+                                                <tr th:if="${historyLog == null}">
+                                                    <td class="fw-semibold text-primary">DB-301</td>
+                                                    <td class="fw-bold text-dark">SQL Queries & DB Administration</td>
+                                                    <td>May 20, 2026</td>
+                                                    <td>36 / 50 (72%)</td>
+                                                    <td><span class="badge bg-success-light text-success rounded-pill px-2.5 py-1">Passed</span></td>
+                                                </tr>
+                                                <tr th:if="${historyLog == null}">
+                                                    <td class="fw-semibold text-primary">CS-205</td>
+                                                    <td class="fw-bold text-dark">Data Structures & Algorithms</td>
+                                                    <td>May 10, 2026</td>
+                                                    <td>21 / 50 (42%)</td>
+                                                    <td><span class="badge bg-danger-light text-danger rounded-pill px-2.5 py-1">Failed</span></td>
+                                                </tr>
+                                                <tr th:if="${historyLog == null}">
+                                                    <td class="fw-semibold text-primary">QT-101</td>
+                                                    <td class="fw-bold text-dark">Logical Aptitude & Maths</td>
+                                                    <td>April 18, 2026</td>
+                                                    <td>48 / 50 (96%)</td>
+                                                    <td><span class="badge bg-success-light text-success rounded-pill px-2.5 py-1">Passed</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts Fragment -->
+    <th:block th:replace="~{fragments/footer :: scripts}"></th:block>
+</body>
+</html>

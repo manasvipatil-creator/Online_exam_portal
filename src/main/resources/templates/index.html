@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Exam Portal - Secure Digital Examination System</title>
+    <meta name="description" content="A premium secure web application for administration, management and taking of online examinations.">
+    <!-- Fragments Styles -->
+    <th:block th:replace="~{fragments/footer :: styles}"></th:block>
+</head>
+<body id="home">
+
+    <!-- Navbar Fragment -->
+    <div th:replace="~{fragments/navbar :: navbar-public}"></div>
+
+    <!-- Hero Section -->
+    <section class="hero-section d-flex align-items-center">
+        <div class="hero-shape hero-shape-1"></div>
+        <div class="hero-shape hero-shape-2"></div>
+        <div class="container position-relative" style="z-index: 1;">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6">
+                    <span class="badge bg-primary-light text-primary px-3 py-2 rounded-pill fw-semibold mb-3">🎓 Modern E-Learning Platform</span>
+                    <h1 class="display-4 fw-extrabold mb-3" style="line-height: 1.2;">
+                        The Smart Way to Conduct <span class="text-gradient-primary">Online Exams</span>
+                    </h1>
+                    <p class="lead text-gray-500 mb-4" style="font-size: 1.1rem; line-height: 1.7;">
+                        Empower students, ease administrative tasks, and secure examination processes. Our rich web interface delivers robust exam authoring, detailed performance analysis, and lightning-fast quiz operations.
+                    </p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a th:href="@{/register}" href="student/register.html" class="btn btn-primary btn-lg px-4 py-3 fs-6">
+                            Get Started Now <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                        <a href="#about" class="btn btn-outline-primary btn-lg px-4 py-3 fs-6">
+                            Learn More
+                        </a>
+                    </div>
+                    
+                    <div class="row mt-5 g-3 border-top border-gray-200 pt-4">
+                        <div class="col-6 col-sm-4">
+                            <h4 class="fw-bold mb-0 text-dark">99.9%</h4>
+                            <small class="text-gray-500">Uptime SLA</small>
+                        </div>
+                        <div class="col-6 col-sm-4">
+                            <h4 class="fw-bold mb-0 text-dark">50k+</h4>
+                            <small class="text-gray-500">Exams Taken</small>
+                        </div>
+                        <div class="col-12 col-sm-4">
+                            <h4 class="fw-bold mb-0 text-dark">Secure</h4>
+                            <small class="text-gray-500">Proctor Protection</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 text-center text-lg-end">
+                    <div class="position-relative d-inline-block">
+                        <!-- Simulated Laptop Screen/Dashboard Visual Mockup -->
+                        <div class="card bg-white p-2 shadow-xl border-0" style="border-radius: 24px; max-width: 500px;">
+                            <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=80" alt="Students taking exam online" class="img-fluid" style="border-radius: 18px; filter: brightness(0.95);">
+                            <div class="position-absolute bg-white rounded-3 shadow-lg p-3 d-flex align-items-center gap-3" style="bottom: 30px; left: -20px; border: 1px solid var(--gray-100);">
+                                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+                                    <i class="fas fa-check-circle fs-5"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 text-dark fw-bold" style="font-size: 0.9rem;">Auto Grading Complete</h6>
+                                    <small class="text-gray-400" style="font-size: 0.75rem;">Instant Student Analytics</small>
+                                </div>
+                            </div>
+                            <div class="position-absolute bg-white rounded-3 shadow-lg p-3 d-flex align-items-center gap-3" style="top: 40px; right: -25px; border: 1px solid var(--gray-100);">
+                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+                                    <i class="fas fa-stopwatch fs-5"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 text-dark fw-bold" style="font-size: 0.9rem;">Real-time Timer</h6>
+                                    <small class="text-gray-400" style="font-size: 0.75rem;">Countdown & Auto-submit</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-5 my-5">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6 order-2 order-lg-1">
+                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80" alt="About Exam Portal" class="img-fluid rounded-4 shadow-lg">
+                </div>
+                <div class="col-lg-6 order-1 order-lg-2">
+                    <span class="badge bg-primary-light text-primary px-3 py-2 rounded-pill fw-semibold mb-3">🏷️ About the System</span>
+                    <h2 class="fw-bold mb-4" style="font-size: 2.25rem;">Revolutionizing Educational Assessments</h2>
+                    <p class="text-gray-500 mb-3" style="line-height: 1.7;">
+                        The **Online Exam Portal** is an all-in-one assessment engine built specifically to help schools, universities, and corporate institutions run paperless examinations. Designed with both user experience and reliability at the core.
+                    </p>
+                    <p class="text-gray-500 mb-4" style="line-height: 1.7;">
+                        Students can review available courses, register directly in just a few taps, undergo real-time exam execution with built-in timers, and secure absolute analytics reports instantly upon completion. On the other side, administrators enjoy total authority over scheduling, adding complex MCQs, updating details, and reviewing statistics.
+                    </p>
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="fas fa-check-circle text-primary"></i>
+                                <span class="fw-semibold text-dark">Responsive on Mobiles & Tablets</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="fas fa-check-circle text-primary"></i>
+                                <span class="fw-semibold text-dark">Real-Time Question Navigator</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="fas fa-check-circle text-primary"></i>
+                                <span class="fw-semibold text-dark">Robust Admin Control Suite</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="fas fa-check-circle text-primary"></i>
+                                <span class="fw-semibold text-dark">Thymeleaf Dynamic Integration</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-5 bg-light">
+        <div class="container my-4">
+            <div class="text-center max-w-600 mx-auto mb-5">
+                <span class="badge bg-primary-light text-primary px-3 py-2 rounded-pill fw-semibold mb-3">🛠️ Key Capabilities</span>
+                <h2 class="fw-bold text-dark">Engineered For Performance & Security</h2>
+                <p class="text-gray-500">Discover the modern features that make our online exam portal stand above conventional platforms.</p>
+            </div>
+            
+            <div class="row g-4">
+                <!-- Feature 1 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card card-premium p-4 h-100">
+                        <div class="feature-icon-wrapper">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3 text-dark">Secure Authentication</h5>
+                        <p class="text-gray-500 mb-0" style="font-size: 0.95rem; line-height: 1.6;">
+                            Clean sign-up, email validation inputs, secure password verification, and custom Spring Security-ready role restrictions.
+                        </p>
+                    </div>
+                </div>
+                <!-- Feature 2 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card card-premium p-4 h-100">
+                        <div class="feature-icon-wrapper">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3 text-dark">Smart Quiz Timers</h5>
+                        <p class="text-gray-500 mb-0" style="font-size: 0.95rem; line-height: 1.6;">
+                            Automatic timers displaying exact minutes, responsive warning highlights, and auto-submission algorithms on timeout.
+                        </p>
+                    </div>
+                </div>
+                <!-- Feature 3 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card card-premium p-4 h-100">
+                        <div class="feature-icon-wrapper">
+                            <i class="fas fa-th-list"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3 text-dark">Interactive Navigator</h5>
+                        <p class="text-gray-500 mb-0" style="font-size: 0.95rem; line-height: 1.6;">
+                            Grid index buttons indicating marked, unanswered, and fully completed items so students keep complete track of work.
+                        </p>
+                    </div>
+                </div>
+                <!-- Feature 4 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card card-premium p-4 h-100">
+                        <div class="feature-icon-wrapper">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3 text-dark">Instant Visual Feedback</h5>
+                        <p class="text-gray-500 mb-0" style="font-size: 0.95rem; line-height: 1.6;">
+                            Graphical progress meters, color-coded response marks, percentage distributions, and dynamic scorecards.
+                        </p>
+                    </div>
+                </div>
+                <!-- Feature 5 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card card-premium p-4 h-100">
+                        <div class="feature-icon-wrapper">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3 text-dark">Admin Scheduling</h5>
+                        <p class="text-gray-500 mb-0" style="font-size: 0.95rem; line-height: 1.6;">
+                            Easy forms to append multiple exams, dynamic question configuration grids, student management tools, and CSV exports.
+                        </p>
+                    </div>
+                </div>
+                <!-- Feature 6 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card card-premium p-4 h-100">
+                        <div class="feature-icon-wrapper">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3 text-dark">100% Mobile Ready</h5>
+                        <p class="text-gray-500 mb-0" style="font-size: 0.95rem; line-height: 1.6;">
+                            Built with fluid CSS breakpoints, allowing students to smoothly take examinations from their smartphones or tablets.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="py-5" style="background: linear-gradient(135deg, var(--dark), var(--dark-light)); color: white;">
+        <div class="container my-4 text-center">
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="p-3">
+                        <div class="text-gradient-primary fs-1 fw-bold mb-2" style="background: linear-gradient(135deg, #a5b4fc, #38bdf8); -webkit-background-clip: text;">2,500+</div>
+                        <span class="text-gray-400">Registered Students</span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3">
+                        <div class="text-gradient-primary fs-1 fw-bold mb-2" style="background: linear-gradient(135deg, #a5b4fc, #38bdf8); -webkit-background-clip: text;">120+</div>
+                        <span class="text-gray-400">Active Exams</span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3">
+                        <div class="text-gradient-primary fs-1 fw-bold mb-2" style="background: linear-gradient(135deg, #a5b4fc, #38bdf8); -webkit-background-clip: text;">15,000+</div>
+                        <span class="text-gray-400">Questions Uploaded</span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3">
+                        <div class="text-gradient-primary fs-1 fw-bold mb-2" style="background: linear-gradient(135deg, #a5b4fc, #38bdf8); -webkit-background-clip: text;">99.98%</div>
+                        <span class="text-gray-400">Exam Success Rate</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-5 my-5">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-5">
+                    <span class="badge bg-primary-light text-primary px-3 py-2 rounded-pill fw-semibold mb-3">📬 Contact Us</span>
+                    <h2 class="fw-bold mb-4 text-dark">Have Questions? Reach Out!</h2>
+                    <p class="text-gray-500 mb-4">
+                        If you encounter technical issues or wish to know more about academic deployments, our dedicated assistance desk is ready to support you.
+                    </p>
+                    
+                    <div class="d-flex align-items-start gap-3 mb-4">
+                        <div class="bg-primary-light text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; flex-shrink: 0;">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold text-dark mb-1">Office Location</h6>
+                            <p class="text-gray-500 mb-0">102 Tech Hub Boulevard, Suite 50, California, USA</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="bg-primary-light text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; flex-shrink: 0;">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold text-dark mb-1">Direct Support Email</h6>
+                            <p class="text-gray-500 mb-0">support@examportal.edu</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-7">
+                    <div class="card p-4 p-md-5 border-0 shadow-lg rounded-4 bg-white">
+                        <h4 class="fw-bold mb-4 text-dark">Send a Message</h4>
+                        <form>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-dark">Full Name</label>
+                                    <input type="text" class="form-control py-2.5 rounded-3" placeholder="Jane Doe" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-dark">Email Address</label>
+                                    <input type="email" class="form-control py-2.5 rounded-3" placeholder="jane@example.com" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold text-dark">Subject</label>
+                                    <input type="text" class="form-control py-2.5 rounded-3" placeholder="Inquiry about Portal Integration" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold text-dark">Message</label>
+                                    <textarea class="form-control rounded-3" rows="4" placeholder="Write your comments or questions here..." required></textarea>
+                                </div>
+                                <div class="col-12 mt-4">
+                                    <button type="submit" class="btn btn-primary btn-lg w-100 py-3 rounded-3">
+                                        Send Message <i class="fas fa-paper-plane ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Public Footer Fragment -->
+    <div th:replace="~{fragments/footer :: footer-public}"></div>
+
+    <!-- Scripts Fragment -->
+    <th:block th:replace="~{fragments/footer :: scripts}"></th:block>
+</body>
+</html>

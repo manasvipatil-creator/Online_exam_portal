@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Question Bank - Admin Panel</title>
+    <!-- Fragments Styles -->
+    <th:block th:replace="~{fragments/footer :: styles}"></th:block>
+</head>
+<body>
+
+    <div class="dashboard-wrapper">
+        <!-- Sidebar Navigation (Active: 'questions') -->
+        <div th:replace="~{fragments/navbar :: admin-sidebar('questions')}"></div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header Toolbar -->
+            <header th:replace="~{fragments/navbar :: dashboard-header('Manage Question Bank')}"></header>
+            
+            <div class="content-body">
+                <!-- Response alerts -->
+                <div th:if="${success}" class="alert alert-success alert-dismissible fade show rounded-3 mb-4" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <span th:text="${success}">Question added successfully!</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                
+                <div class="row g-4">
+                    <!-- LEFT COLUMN: ADD QUESTION FORM -->
+                    <div class="col-xl-5">
+                        <div class="card card-premium p-4 border-0 bg-white">
+                            <h5 class="fw-bold text-dark mb-4"><i class="fas fa-plus-circle text-primary me-2"></i> Append New Question</h5>
+                            
+                            <form th:action="@{/admin/questions/add}" action="/admin/manage-questions.html" method="POST" class="needs-validation" novalidate>
+                                <!-- Select Exam Parent -->
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold text-dark">Associate with Exam</label>
+                                    <select class="form-select rounded-3" name="examId" required>
+                                        <option value="" disabled selected>Select Parent Exam</option>
+                                        <!-- Thymeleaf dynamic exams -->
+                                        <option th:each="ex : ${exams}" th:value="${ex.id}" th:text="${ex.title}">Core Java Basics</option>
+                                        <option th:if="${exams == null}">Core Java Programming</option>
+                                        <option th:if="${exams == null}">SQL Queries & DB Admin</option>
+                                        <option th:if="${exams == null}">Data Structures & Algorithms</option>
+                                    </select>
+                                    <div class="invalid-feedback">Please link the question to an exam.</div>
+                                </div>
+                                
+                                <!-- Question Text -->
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold text-dark">Question Statement</label>
+                                    <textarea class="form-control rounded-3" name="questionText" rows="3" placeholder="What is the output of..." required></textarea>
+                                    <div class="invalid-feedback">Please write question text.</div>
+                                </div>
+                                
+                                <!-- MCQ Options Inputs -->
+                                <div class="row g-2">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-semibold text-dark" style="font-size: 0.85rem;">Option A</label>
+                                        <input type="text" class="form-control rounded-3" name="optionA" placeholder="First option" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-semibold text-dark" style="font-size: 0.85rem;">Option B</label>
+                                        <input type="text" class="form-control rounded-3" name="optionB" placeholder="Second option" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-semibold text-dark" style="font-size: 0.85rem;">Option C</label>
+                                        <input type="text" class="form-control rounded-3" name="optionC" placeholder="Third option" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-semibold text-dark" style="font-size: 0.85rem;">Option D</label>
+                                        <input type="text" class="form-control rounded-3" name="optionD" placeholder="Fourth option" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="row g-2">
+                                    <!-- Correct Answer -->
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label fw-semibold text-dark">Correct Answer</label>
+                                        <select class="form-select rounded-3" name="correctAnswer" required>
+                                            <option value="" disabled selected>Select Answer</option>
+                                            <option value="A">Option A</option>
+                                            <option value="B">Option B</option>
+                                            <option value="C">Option C</option>
+                                            <option value="D">Option D</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Score Weight -->
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label fw-semibold text-dark">Question Weight</label>
+                                        <select class="form-select rounded-3" name="marks" required>
+                                            <option value="1">1 Mark</option>
+                                            <option value="2" selected>2 Marks</option>
+                                            <option value="5">5 Marks</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary w-100 py-2.5 rounded-3 fw-bold shadow-sm">
+                                    Add to Question Bank <i class="fas fa-plus ms-1"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- RIGHT COLUMN: QUESTIONS TABLE -->
+                    <div class="col-xl-7">
+                        <div class="card card-premium p-4 border-0 bg-white">
+                            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+                                <h5 class="fw-bold text-dark mb-0">Active Questions</h5>
+                                
+                                <!-- Search filter -->
+                                <div class="position-relative" style="max-width: 280px; width: 100%;">
+                                    <input type="text" class="form-control py-2 px-3 rounded-pill bg-light border-0" placeholder="Filter questions..." style="font-size: 0.85rem; text-indent: 20px;">
+                                    <i class="fas fa-search position-absolute text-gray-400" style="left: 15px; top: 12px; font-size: 0.85rem;"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0" style="font-size: 0.9rem;">
+                                    <thead class="table-light text-gray-500" style="font-size: 0.85rem;">
+                                        <tr>
+                                            <th>Associated Exam</th>
+                                            <th>Question Statement</th>
+                                            <th>Key</th>
+                                            <th>Weight</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+ <tbody>
+    <tr th:each="q : ${questionsList}">
+
+        <td class="fw-bold text-dark">
+            Question
+        </td>
+
+        <td class="text-truncate" style="max-width: 300px;"
+            th:text="${q.questionText}">
+        </td>
+
+        <td>
+            <span class="badge bg-success-light text-success rounded-pill px-2.5 py-1"
+                  th:text="${q.correctAnswer}">
+            </span>
+        </td>
+
+        <td th:text="${q.marks} + ' Marks'"></td>
+
+        <td>
+            <div class="d-flex gap-2">
+                <a th:href="@{'/admin/questions/edit/' + ${q.id}}"
+                   class="btn btn-light btn-sm text-warning">
+                    <i class="fas fa-pencil-alt"></i>
+                </a>
+
+                <a th:href="@{'/admin/questions/delete/' + ${q.id}}"
+                   class="btn btn-light btn-sm text-danger">
+                    <i class="fas fa-trash-alt"></i>
+                </a>
+            </div>
+        </td>
+
+    </tr>
+</tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts Fragment -->
+    <th:block th:replace="~{fragments/footer :: scripts}"></th:block>
+</body>
+</html>

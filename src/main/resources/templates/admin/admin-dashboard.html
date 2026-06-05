@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard Console - Online Exam Portal</title>
+    <!-- Fragments Styles -->
+    <th:block th:replace="~{fragments/footer :: styles}"></th:block>
+</head>
+<body>
+
+    <div class="dashboard-wrapper">
+        <!-- Sidebar Navigation (Active: 'dashboard') -->
+        <div th:replace="~{fragments/navbar :: admin-sidebar('dashboard')}"></div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header Toolbar -->
+            <header th:replace="~{fragments/navbar :: dashboard-header('Admin Control Console')}"></header>
+            
+            <div class="content-body">
+                <!-- Welcome greeting -->
+                <div class="d-flex flex-wrap align-items-center justify-content-between mb-4">
+                    <div>
+                        <h4 class="fw-bold text-dark mb-1">System Health Overview</h4>
+                        <p class="text-gray-500 mb-0" style="font-size: 0.9rem;">Real-time metrics, active exam stats, and student activity logs.</p>
+                    </div>
+                    <div class="mt-2 mt-sm-0">
+                        <a th:href="@{/admin/exams}" href="manage-exams.html" class="btn btn-primary btn-sm rounded-3">
+                            <i class="fas fa-plus-circle me-1"></i> Add New Exam
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Admin Statistics Grid -->
+                <div class="row g-4 mb-4">
+                    <!-- Stat 1: Total Students -->
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="stat-card">
+                            <div>
+                                <small class="text-gray-500 fw-semibold d-block uppercase tracking-wider mb-1" style="font-size: 0.75rem;">Total Students</small>
+                                <h3 class="fw-bold mb-0 text-dark" th:text="${totalStudents}" text="350">350</h3>
+                            </div>
+                            <div class="icon-box icon-box-primary">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Stat 2: Total Exams -->
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="stat-card">
+                            <div>
+                                <small class="text-gray-500 fw-semibold d-block uppercase tracking-wider mb-1" style="font-size: 0.75rem;">Total Exams</small>
+                                <h3 class="fw-bold mb-0 text-dark" th:text="${totalExams}" text="14">14</h3>
+                            </div>
+                            <div class="icon-box icon-box-success">
+                                <i class="fas fa-folder-open"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Stat 3: Total Questions -->
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="stat-card">
+                            <div>
+                                <small class="text-gray-500 fw-semibold d-block uppercase tracking-wider mb-1" style="font-size: 0.75rem;">Total Questions</small>
+                                <h3 class="fw-bold mb-0 text-dark" th:text="${totalQuestions}" text="420">420</h3>
+                            </div>
+                            <div class="icon-box icon-box-warning">
+                                <i class="fas fa-question-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Stat 4: Total Results -->
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="stat-card">
+                            <div>
+                                <small class="text-gray-500 fw-semibold d-block uppercase tracking-wider mb-1" style="font-size: 0.75rem;">Total Attempts</small>
+                                <h3 class="fw-bold mb-0 text-dark" th:text="${totalResults}" text="1,240">1,240</h3>
+                            </div>
+                            <div class="icon-box icon-box-secondary">
+                                <i class="fas fa-poll-h"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chart Section & Split Grid -->
+                <div class="row g-4">
+                    <!-- Left Column: Graphical Performance & Student Logs -->
+                    <div class="col-lg-8">
+                        <!-- SVGs/Canvas Chart Placeholder -->
+                        <div class="card card-premium p-4 border-0 mb-4 bg-white">
+                            <h5 class="fw-bold text-dark mb-4">Exam Attempts Rate (Past 7 Days)</h5>
+                            <div id="adminStatsChart" style="height: 220px; width: 100%;">
+                                <!-- Chart drawing automatically injected via JavaScript drawing engine in app.js -->
+                            </div>
+                        </div>
+                        
+                        <!-- Recent Student Exam Attempts List -->
+                        <div class="card card-premium p-4 border-0 bg-white">
+                            <div class="d-flex align-items-center justify-content-between mb-4">
+                                <h5 class="fw-bold text-dark mb-0">Recent Submissions</h5>
+                                <a th:href="@{/admin/results}" href="manage-results.html" class="text-primary text-decoration-none fw-semibold" style="font-size: 0.9rem;">View All attempts</a>
+                            </div>
+                            
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0" style="font-size: 0.9rem;">
+                                    <thead class="table-light text-gray-500" style="font-size: 0.85rem;">
+                                        <tr>
+                                            <th>Student Name</th>
+                                            <th>Exam Title</th>
+                                            <th>Submission Date</th>
+                                            <th>Obtained Score</th>
+                                            <th>Pass/Fail</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Loop placeholder -->
+                                        <tr th:each="attempt : ${recentAttempts}">
+                                            <td class="fw-bold text-dark" th:text="${attempt.studentName}">Sam Parker</td>
+                                            <td th:text="${attempt.examTitle}">Core Java Basics</td>
+                                            <td th:text="${attempt.date}">2026-05-30</td>
+                                            <td class="fw-semibold text-dark" th:text="${attempt.score}">45 / 50</td>
+                                            <td>
+                                                <span class="badge bg-success-light text-success rounded-pill px-2.5 py-1" th:if="${attempt.passed}">Passed</span>
+                                                <span class="badge bg-danger-light text-danger rounded-pill px-2.5 py-1" th:unless="${attempt.passed}">Failed</span>
+                                            </td>
+                                        </tr>
+                                        <!-- Static Fallbacks -->
+                                        <tr th:if="${recentAttempts == null}">
+                                            <td class="fw-bold text-dark">Sam Parker</td>
+                                            <td>Core Java Programming</td>
+                                            <td>May 30, 2026</td>
+                                            <td class="fw-semibold text-dark">45 / 50 (90%)</td>
+                                            <td><span class="badge bg-success-light text-success rounded-pill px-2.5 py-1">Passed</span></td>
+                                        </tr>
+                                        <tr th:if="${recentAttempts == null}">
+                                            <td class="fw-bold text-dark">Amanda Ross</td>
+                                            <td>SQL Queries & DB Admin</td>
+                                            <td>May 30, 2026</td>
+                                            <td class="fw-semibold text-dark">36 / 50 (72%)</td>
+                                            <td><span class="badge bg-success-light text-success rounded-pill px-2.5 py-1">Passed</span></td>
+                                        </tr>
+                                        <tr th:if="${recentAttempts == null}">
+                                            <td class="fw-bold text-dark">Mark Henderson</td>
+                                            <td>Data Structures & Algorithms</td>
+                                            <td>May 29, 2026</td>
+                                            <td class="fw-semibold text-dark">18 / 50 (36%)</td>
+                                            <td><span class="badge bg-danger-light text-danger rounded-pill px-2.5 py-1">Failed</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column: System Logs & Recent Activities -->
+                    <div class="col-lg-4">
+                        <div class="card card-premium p-4 border-0 bg-white">
+                            <h5 class="fw-bold text-dark mb-4">Live System Activities</h5>
+                            
+                            <div class="d-flex flex-column gap-3">
+                                <!-- Activity 1 -->
+                                <div class="d-flex align-items-start gap-3">
+                                    <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center p-2" style="width: 36px; height: 36px; flex-shrink: 0;">
+                                        <i class="fas fa-check-circle fs-6"></i>
+                                    </div>
+                                    <div style="line-height: 1.3;">
+                                        <span class="d-block text-dark fw-semibold" style="font-size: 0.85rem;">Java Exam Grading Completed</span>
+                                        <small class="text-gray-400" style="font-size: 0.75rem;">12 records auto-scored &bull; 5 mins ago</small>
+                                    </div>
+                                </div>
+                                <!-- Activity 2 -->
+                                <div class="d-flex align-items-start gap-3">
+                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center p-2" style="width: 36px; height: 36px; flex-shrink: 0;">
+                                        <i class="fas fa-plus-circle fs-6"></i>
+                                    </div>
+                                    <div style="line-height: 1.3;">
+                                        <span class="d-block text-dark fw-semibold" style="font-size: 0.85rem;">New Technical Quiz Configured</span>
+                                        <small class="text-gray-400" style="font-size: 0.75rem;">Scheduled by Prof. Davis &bull; 1 hour ago</small>
+                                    </div>
+                                </div>
+                                <!-- Activity 3 -->
+                                <div class="d-flex align-items-start gap-3">
+                                    <div class="bg-warning text-white rounded-circle d-flex align-items-center justify-content-center p-2" style="width: 36px; height: 36px; flex-shrink: 0;">
+                                        <i class="fas fa-user-plus fs-6"></i>
+                                    </div>
+                                    <div style="line-height: 1.3;">
+                                        <span class="d-block text-dark fw-semibold" style="font-size: 0.85rem;">3 Student Profiles Verified</span>
+                                        <small class="text-gray-400" style="font-size: 0.75rem;">Identity verification cleared &bull; 2 hours ago</small>
+                                    </div>
+                                </div>
+                                <!-- Activity 4 -->
+                                <div class="d-flex align-items-start gap-3">
+                                    <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center p-2" style="width: 36px; height: 36px; flex-shrink: 0;">
+                                        <i class="fas fa-file-export fs-6"></i>
+                                    </div>
+                                    <div style="line-height: 1.3;">
+                                        <span class="d-block text-dark fw-semibold" style="font-size: 0.85rem;">CSV Performance Logs Exported</span>
+                                        <small class="text-gray-400" style="font-size: 0.75rem;">Result archive saved &bull; 1 day ago</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts Fragment -->
+    <th:block th:replace="~{fragments/footer :: scripts}"></th:block>
+</body>
+</html>

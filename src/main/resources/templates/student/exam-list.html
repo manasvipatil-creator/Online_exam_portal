@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Exams - Online Exam Portal</title>
+    <!-- Fragments Styles -->
+    <th:block th:replace="~{fragments/footer :: styles}"></th:block>
+</head>
+<body>
+
+    <div class="dashboard-wrapper">
+        <!-- Sidebar Navigation (Active: 'exams') -->
+        <div th:replace="~{fragments/navbar :: student-sidebar('exams')}"></div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Dashboard Header -->
+            <header th:replace="~{fragments/navbar :: dashboard-header('Available Examinations')}"></header>
+            
+            <div class="content-body">
+                <!-- Page Top Description -->
+                <div class="row align-items-center mb-4">
+                    <div class="col-md-6">
+                        <h4 class="fw-bold text-dark mb-1">Active Question Sets</h4>
+                        <p class="text-gray-500 mb-0" style="font-size: 0.9rem;">Select an exam below and click start. Please read instructions carefully before starting.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end mt-2 mt-md-0">
+                        <div class="btn-group rounded-3" role="group">
+                         <button type="button"
+						        class="btn btn-primary btn-sm px-3 filter-btn active"
+						        onclick="filterExams('All', this)">
+						    All
+						</button>
+						
+						<button type="button"
+						        class="btn btn-light btn-sm px-3 filter-btn"
+						        onclick="filterExams('Technical', this)">
+						    Technical
+						</button>
+						
+						<button type="button"
+						        class="btn btn-light btn-sm px-3 filter-btn"
+						        onclick="filterExams('Database', this)">
+						    Database
+						</button>
+						
+						<button type="button"
+						        class="btn btn-light btn-sm px-3 filter-btn"
+						        onclick="filterExams('Aptitude', this)">
+						    Aptitude
+						</button>
+                        </div>
+                    </div>
+                </div>
+                
+                
+               
+			                <div id="noExamsMessage"
+			     class="text-center py-5"
+			     style="display:none;">
+			    
+			    <i class="fas fa-file-alt fa-3x text-secondary mb-3"></i>
+			
+			    <h4 class="fw-bold text-dark">
+			        No Exams Available
+			    </h4>
+			
+			    <p class="text-muted">
+			        No examinations found in this category.
+			    </p>
+			
+			</div>
+			                
+                <!-- Exams Cards Grid -->
+                <div class="row g-4">
+                    <!-- Thymeleaf dynamic loop fallback standard -->
+                  <div class="col-md-6 col-xl-4 exam-card"
+					     th:each="exam : ${examList}"
+					     th:attr="data-category=${exam.subject}">
+                        <div class="card card-premium h-100 border-0">
+                            <div class="p-4 d-flex flex-column h-100">
+                                <div class="d-flex align-items-center justify-content-between mb-3">
+                                    <span class="badge bg-primary-light text-primary rounded-pill px-3 py-1.5 fw-semibold" th:text="${exam.subject}">Technical</span>
+                                    <span class="badge bg-light text-gray-500 rounded-pill px-2.5 py-1" style="font-size: 0.75rem;"><i class="far fa-clock me-1"></i> <span th:text="${exam.duration}">45</span> Mins</span>
+                                </div>
+                                
+                                <h5 class="fw-bold text-dark mb-2" th:text="${exam.examName}">Core Java Foundation</h5>
+                                <p class="text-gray-400 mb-4 flex-grow-1" style="font-size: 0.85rem; line-height: 1.5;" th:text="${exam.description}">
+                                    Assessments covers Object-Oriented programming principles, collections, exceptions, streams and fundamental syntax queries.
+                                </p>
+                                
+                                <div class="row g-2 border-top border-gray-100 pt-3 mb-4" style="font-size: 0.85rem;">
+                                    <div class="col-6">
+                                        <span class="text-gray-500 d-block">Total Questions</span>
+                                        <span class="fw-bold text-dark" th:text="${exam.totalMarks}">30 Qs</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="text-gray-500 d-block">Passing Score</span>
+                                        <span class="fw-bold text-dark" th:text="${exam.passingScore}">150 Marks</span>
+                                    </div>
+                                </div>
+                                
+											<a th:href="@{/student/exam/start/{id}/{index}
+											(id=${exam.id},index=0)}"
+											   class="btn btn-primary w-100 py-2.5 rounded-3 fw-semibold">
+											
+											    Start Examination
+											    <i class="fas fa-play ms-1" style="font-size: 0.8rem;"></i>
+											
+											</a>                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Static Fallback Items for direct double-click testing or default mock view -->
+                    <!-- Exam 1 -->
+                 
+                    
+          
+                </div>
+						 <div id="noExamsMessage"
+						     class="text-center py-5"
+						     style="display:none;">
+						
+						    <h3>No Exams Available</h3>
+						    <p>No examinations found in this category.</p>
+						
+						</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts Fragment -->
+    <th:block th:replace="~{fragments/footer :: scripts}"></th:block>
+    
+ <script>
+function filterExams(category, btn) {
+
+    let cards = document.querySelectorAll('.exam-card');
+    let visibleCount = 0;   // <-- HE ADD KAR
+
+    cards.forEach(card => {
+
+        let examCategory = card.getAttribute('data-category');
+
+        if(category === 'All' || examCategory === category) {
+
+            card.style.display = 'block';
+            visibleCount++;   // <-- visible cards count
+
+        } else {
+
+            card.style.display = 'none';
+        }
+    });
+
+    document.querySelectorAll('.filter-btn').forEach(button => {
+        button.classList.remove('btn-primary');
+        button.classList.add('btn-light');
+    });
+
+    btn.classList.remove('btn-light');
+    btn.classList.add('btn-primary');
+
+    console.log("Visible Cards = " + visibleCount);
+
+    const msg = document.getElementById('noExamsMessage');
+
+    if (visibleCount === 0) {
+        msg.style.display = 'block';
+    } else {
+        msg.style.display = 'none';
+    }
+}
+</script>
+</body>
+</html>

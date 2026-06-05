@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Registered Students - Admin Panel</title>
+    <!-- Fragments Styles -->
+    <th:block th:replace="~{fragments/footer :: styles}"></th:block>
+</head>
+<body>
+
+    <div class="dashboard-wrapper">
+        <!-- Sidebar Navigation (Active: 'students') -->
+        <div th:replace="~{fragments/navbar :: admin-sidebar('students')}"></div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header Toolbar -->
+            <header th:replace="~{fragments/navbar :: dashboard-header('Manage Student Registries')}"></header>
+            
+            <div class="content-body">
+                <!-- Response alerts -->
+                <div th:if="${success}" class="alert alert-success alert-dismissible fade show rounded-3 mb-4" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <span th:text="${success}">Student account modified successfully!</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                
+                <!-- Quick Summary Cards -->
+                <div class="row g-4 mb-4">
+                    <div class="col-6 col-md-3">
+                        <div class="p-3 bg-white rounded-4 shadow-sm border border-gray-100">
+                            <span class="text-gray-500 d-block fs-7 uppercase fw-bold mb-1">Total Registrations</span>
+                            <h4 class="fw-bold text-dark mb-0">350 Users</h4>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="p-3 bg-white rounded-4 shadow-sm border border-gray-100">
+                            <span class="text-gray-500 d-block fs-7 uppercase fw-bold mb-1">Verified Accounts</span>
+                            <h4 class="fw-bold text-success mb-0">342 Active</h4>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="p-3 bg-white rounded-4 shadow-sm border border-gray-100">
+                            <span class="text-gray-500 d-block fs-7 uppercase fw-bold mb-1">Suspended Slots</span>
+                            <h4 class="fw-bold text-danger mb-0">8 Blocked</h4>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="p-3 bg-white rounded-4 shadow-sm border border-gray-100">
+                            <span class="text-gray-500 d-block fs-7 uppercase fw-bold mb-1">Support Tickets</span>
+                            <h4 class="fw-bold text-warning mb-0">2 Open</h4>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Students Table Box -->
+                <div class="card card-premium p-4 border-0 bg-white">
+                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+                        <h5 class="fw-bold text-dark mb-0">Student Registry</h5>
+                        
+                        <!-- Search & filter -->
+                        <div class="d-flex align-items-center gap-2" style="max-width: 400px; width: 100%;">
+                            <div class="position-relative w-100">
+                                <input type="text" class="form-control py-2 px-3 rounded-pill bg-light border-0" placeholder="Search by Name, ID or Email..." style="font-size: 0.85rem; text-indent: 20px;">
+                                <i class="fas fa-search position-absolute text-gray-400" style="left: 15px; top: 12px; font-size: 0.85rem;"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0" style="font-size: 0.9rem;">
+                            <thead class="table-light text-gray-500" style="font-size: 0.85rem;">
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Full Name</th>
+                                    <th>Email Address</th>
+                                    <th>Mobile Number</th>
+                                    <th>Registered Date</th>
+                                    <th>System Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Dynamic loop standard -->
+                                <tr th:each="student : ${studentsList}">
+                                    <td class="fw-bold text-primary" th:text="${student.id}">STU-2026-9804</td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="avatar rounded-circle bg-primary-light text-primary d-flex align-items-center justify-content-center fw-bold" style="width: 32px; height: 32px; font-size: 0.75rem;">
+                                                SP
+                                            </div>
+                                            <span class="fw-bold text-dark" th:text="${student.fullName}">Sam Parker</span>
+                                        </div>
+                                    </td>
+                                    <td th:text="${student.email}">sam.parker@university.edu</td>
+                                    <td th:text="${student.mobileNumber}">9876543210</td>
+                                   <td>Not Available</td>
+                                    <td>
+                                       <span class="badge bg-success">
+										        Active
+										    </span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex gap-2">
+                                            <a th:href="@{'/admin/students/details/' + ${student.id}}" class="btn btn-light btn-sm text-primary" title="View Details"><i class="fas fa-eye"></i></a>
+												<a href="#"
+												   class="btn btn-light btn-sm text-danger"
+												   th:onclick="'confirmDelete(' + ${student.id} + ')'">
+												    <i class="fas fa-user-minus"></i>
+												</a>
+
+   
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- Static fallbacks -->
+                                <tr th:if="${studentsList == null}">
+                                    <td class="fw-bold text-primary">STU-2026-9804</td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="avatar rounded-circle bg-primary-light text-primary d-flex align-items-center justify-content-center fw-bold" style="width: 32px; height: 32px; font-size: 0.75rem;">
+                                                SP
+                                            </div>
+                                            <span class="fw-bold text-dark">Sam Parker</span>
+                                        </div>
+                                    </td>
+                                    <td>sam.parker@university.edu</td>
+                                    <td>9876543210</td>
+                                    <td>March 14, 2026</td>
+                                    <td><span class="badge bg-success-light text-success rounded-pill px-2.5 py-1">Active</span></td>
+                                    <td>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-light btn-sm text-primary" title="View Details"><i class="fas fa-eye"></i></button>
+                                            <button class="btn btn-light btn-sm text-danger" title="Delete Profile"><i class="fas fa-user-minus"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr th:if="${studentsList == null}">
+                                    <td class="fw-bold text-primary">STU-2026-1402</td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="avatar rounded-circle bg-secondary-light text-secondary d-flex align-items-center justify-content-center fw-bold" style="width: 32px; height: 32px; font-size: 0.75rem;">
+                                                AR
+                                            </div>
+                                            <span class="fw-bold text-dark">Amanda Ross</span>
+                                        </div>
+                                    </td>
+                                    <td>amanda.ross@university.edu</td>
+                                    <td>9123456780</td>
+                                    <td>March 20, 2026</td>
+                                    <td><span class="badge bg-success-light text-success rounded-pill px-2.5 py-1">Active</span></td>
+                                    <td>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-light btn-sm text-primary" title="View Details"><i class="fas fa-eye"></i></button>
+                                            <button class="btn btn-light btn-sm text-danger" title="Delete Profile"><i class="fas fa-user-minus"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr th:if="${studentsList == null}">
+                                    <td class="fw-bold text-primary">STU-2026-8095</td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="avatar rounded-circle bg-warning-light text-warning d-flex align-items-center justify-content-center fw-bold" style="width: 32px; height: 32px; font-size: 0.75rem;">
+                                                MH
+                                            </div>
+                                            <span class="fw-bold text-dark">Mark Henderson</span>
+                                        </div>
+                                    </td>
+                                    <td>mark.h@university.edu</td>
+                                    <td>8976543120</td>
+                                    <td>March 25, 2026</td>
+                                    <td><span class="badge bg-danger-light text-danger rounded-pill px-2.5 py-1">Suspended</span></td>
+                                    <td>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-light btn-sm text-primary" title="View Details"><i class="fas fa-eye"></i></button>
+                                            <button class="btn btn-light btn-sm text-danger" title="Delete Profile"><i class="fas fa-user-minus"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts Fragment -->
+    <th:block th:replace="~{fragments/footer :: scripts}"></th:block>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+<script>
+function confirmDelete(id) {
+
+    Swal.fire({
+        title: 'Delete Student?',
+        text: 'This action cannot be undone!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Yes, Delete',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+
+        if (result.isConfirmed) {
+            window.location.href =
+                '/admin/students/delete/' + id;
+        }
+    });
+}
+</script>
+
+</body>
+</html>
+</body>
+</html>
