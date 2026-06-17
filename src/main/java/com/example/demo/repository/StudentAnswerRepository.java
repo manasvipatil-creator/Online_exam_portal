@@ -15,4 +15,9 @@ public interface StudentAnswerRepository
             int studentId,
             int questionId
     );
+    
+    
+    long countByStudentId(int studentId);
+    
+    void deleteByStudentIdAndExamId(int studentId, int examId);
 }

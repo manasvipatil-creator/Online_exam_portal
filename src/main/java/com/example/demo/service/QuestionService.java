@@ -5,11 +5,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import com.example.demo.entity.Question;
 import com.example.demo.repository.QuestionRepository;
 
 @Service
 public class QuestionService {
+	
+	
 	
 	@Autowired
 	public QuestionRepository questionRepository;
@@ -27,6 +30,15 @@ public class QuestionService {
 	
 	public List<Question>getAllQuestions(){
 		return questionRepository.findAll();
+	}
+	
+	public Question getQuestionById(int id) {
+
+	    return questionRepository.findById(id).orElse(null);
+	}
+	
+	public List<Question> getQuestionsByExamId(int examId) {
+	    return questionRepository.findByExamId(examId);
 	}
 
 }

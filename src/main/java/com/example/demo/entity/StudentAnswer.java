@@ -14,8 +14,20 @@ public class StudentAnswer {
     private int questionId;
 
     private String selectedAnswer;
+    
+    
+    @Column(name = "exam_id")
+    private Integer examId;
 
-    public int getId() {
+    public int getExamId() {
+		return examId;
+	}
+
+	public void setExamId(int examId) {
+		this.examId = examId;
+	}
+
+	public int getId() {
         return id;
     }
 

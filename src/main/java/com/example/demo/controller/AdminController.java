@@ -1,13 +1,12 @@
 package com.example.demo.controller;
-
+import com.example.demo.service.ExamService;
+import com.example.demo.service.QuestionService;
 import com.example.demo.entity.Admin;
 import org.springframework.ui.Model;
 import com.example.demo.service.AdminService;
 import com.example.demo.service.ResultService;
 import com.example.demo.service.StudentService;
-
 import jakarta.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +25,12 @@ public class AdminController {
     
     @Autowired
     private ResultService resultService;
+    
+    @Autowired
+    private ExamService examService;
+
+    @Autowired
+    private QuestionService questionService;
     
     @GetMapping("/admin/manage-students")
     public String manageStudents(Model model) {
@@ -68,10 +73,37 @@ public class AdminController {
     }
 
     @GetMapping("/admin/dashboard")
-    public String dashboard(HttpSession session) {
+    public String dashboard(HttpSession session,
+                            Model model) {
 
-        System.out.println("ADMIN SESSION = "
-                + session.getAttribute("admin"));
+        Admin admin =
+                (Admin) session.getAttribute("admin");
+
+        if(admin == null) {
+            return "redirect:/admin/login";
+        }
+
+        model.addAttribute("admin", admin);
+
+        model.addAttribute(
+                "totalStudents",
+                studentService.getAllStudents().size());
+
+        model.addAttribute(
+                "totalExams",
+                examService.getAllExams().size());
+
+        model.addAttribute(
+                "totalQuestions",
+                questionService.getAllQuestions().size());
+
+        model.addAttribute(
+                "totalResults",
+                resultService.getAllResults().size());
+
+        model.addAttribute(
+                "recentResults",
+                resultService.getAllResults());
 
         return "admin/admin-dashboard";
     }

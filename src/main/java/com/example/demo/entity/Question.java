@@ -18,9 +18,16 @@ public class Question {
 	
 	private String correctAnswer;
 	private int marks;
+	private int examId;
 	
 	
 	
+	public int getExamId() {
+		return examId;
+	}
+	public void setExamId(int examId) {
+		this.examId = examId;
+	}
 	public int getId() {
 		return id;
 	}

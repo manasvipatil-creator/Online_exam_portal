@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.entity.StudentAnswer;
 import com.example.demo.repository.StudentAnswerRepository;
 
@@ -45,5 +45,17 @@ public class StudentAnswerService {
         return repository.findByStudentIdAndQuestionId(
                 studentId,
                 questionId);
+    }
+    
+    public long getAttemptedExamCount(int studentId) {
+
+        return repository.countByStudentId(studentId);
+    }
+    
+    
+    @Transactional
+    public void clearExamAnswers(int studentId, int examId) {
+
+        repository.deleteByStudentIdAndExamId(studentId, examId);
     }
 }

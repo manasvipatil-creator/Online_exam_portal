@@ -39,7 +39,7 @@
                                     <select class="form-select rounded-3" name="examId" required>
                                         <option value="" disabled selected>Select Parent Exam</option>
                                         <!-- Thymeleaf dynamic exams -->
-                                        <option th:each="ex : ${exams}" th:value="${ex.id}" th:text="${ex.title}">Core Java Basics</option>
+                                        <option th:each="ex : ${exams}" th:value="${ex.id}" th:text="${ex.examName}">Core Java Basics</option>
                                         <option th:if="${exams == null}">Core Java Programming</option>
                                         <option th:if="${exams == null}">SQL Queries & DB Admin</option>
                                         <option th:if="${exams == null}">Data Structures & Algorithms</option>

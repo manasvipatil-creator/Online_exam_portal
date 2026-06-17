@@ -80,8 +80,11 @@
                                              style="width: 90%;" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                     <h5 class="fw-bold text-dark mb-0" th:text="${examTitle}" text="Core Java Fundamentals">Core Java Fundamentals</h5>
-                                    <small class="text-gray-400">Attempted on May 30, 2026</small>
-                                </div>
+					                 <small class="text-gray-400"
+		                                  th:text="'Attempted on ' + ${date}">
+						                   Attempted Date
+									</small>
+					              </div>
                                 
                                 <!-- Core Statistical Row Grid -->
                                 <div class="row g-3 text-center mb-5">

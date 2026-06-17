@@ -16,6 +16,17 @@ public class ResultService {
     public List<Result> getAllResults() {
         return resultRepository.findAll();
     }
+    public List<Result> getStudentResults(String email) {
+        return resultRepository.findByStudentEmailOrderByIdDesc(email);
+    }
+    
+    public void saveResult(Result result) {
 
+        resultRepository.save(result);
+    }
+    
+
+    
+    
 
 }

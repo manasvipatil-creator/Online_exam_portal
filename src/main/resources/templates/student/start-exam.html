@@ -32,12 +32,20 @@
     <!-- Main Exam Interface -->
     <div class="container-fluid px-md-5 py-4">
     
-        <form th:action="@{/student/exam/submit}" action="/student/result.html" method="POST" id="examForm">
+        <form th:action="@{/student/exam/submit}" method="POST" id="examForm">
             <!-- Hidden inputs to track exam details in Spring Boot -->
-          <input type="hidden"
-       name="questionId"
-       th:value="${questionList[currentIndex].id}">
-            <input type="hidden" name="studentId" th:value="${studentId}" value="202">
+          <!-- Current Question ID -->
+    <input type="hidden"
+           name="questionId"
+           th:value="${currentQuestion.id}">
+
+    <!-- Exam ID -->
+    <input type="hidden"
+           name="examId"
+           th:value="${examId}">
+         
+       
+           
             
             <div class="row g-4">
                 <!-- LEFT COLUMN: QUESTION CONTENT & CONTROLS -->
@@ -76,17 +84,15 @@
     <h6 style="color:red" th:text="'Total Questions = ' + ${questionList.size()}"></h6>
 
     <!-- Question Text -->
-    <h4 class="fw-bold text-dark mb-4"
-        style="line-height: 1.5;"
-        th:if="${questionList != null and !questionList.isEmpty()}"
-        th:text="${questionList[currentIndex].questionText}">
-        Question Text
-    </h4>
-    <input type="hidden"
-       name="questionId"
-       th:value="${questionList[currentIndex].id}">
-
+   <h4 class="fw-bold text-dark mb-4"
+    style="line-height: 1.5;"
+    th:if="${currentQuestion != null}"
+    th:text="${currentQuestion.questionText}">
+    Question Text
+</h4>
 <input type="hidden"
+       name="questionId"
+       th:value="${currentQuestion.id}"><input type="hidden"
        name="examId"
        th:value="${examId}">
     
@@ -95,103 +101,107 @@
     <div class="options-container mb-4">
 
         <!-- Option A -->
-        <div class="mcq-option">
-          <input type="radio"
-       id="optA"
-       name="selectedAnswer"
-       value="A"
-       th:checked="${selectedAnswer == 'A'}">
-            <label class="mb-0 fw-semibold text-dark w-100"
-                   for="optA"
-                   th:text="'A) ' + ${questionList[currentIndex].optionA}">
-                Option A
-            </label>
-        </div>
+<!-- Option A -->
+<div class="mcq-option">
+    <input type="radio"
+           id="optA"
+           name="selectedAnswer"
+           value="A"
+           th:checked="${selectedAnswer == 'A'}">
 
-        <!-- Option B -->
-        <div class="mcq-option">
-          <input type="radio"
-       id="optB"
-       name="selectedAnswer"
-       value="B"
-       th:checked="${selectedAnswer == 'B'}">
-            <label class="mb-0 fw-semibold text-dark w-100"
-                   for="optB"
-                   th:text="'B) ' + ${questionList[currentIndex].optionB}">
-                Option B
-            </label>
-        </div>
+    <label class="mb-0 fw-semibold text-dark w-100"
+           for="optA"
+           th:text="'A) ' + ${currentQuestion.optionA}">
+        Option A
+    </label>
+</div>
 
-        <!-- Option C -->
-        <div class="mcq-option">
-           <input type="radio"
-       id="optC"
-       name="selectedAnswer"
-       value="C"
-       th:checked="${selectedAnswer == 'C'}">
-            <label class="mb-0 fw-semibold text-dark w-100"
-                   for="optC"
-                   th:text="'C) ' + ${questionList[currentIndex].optionC}">
-                Option C
-            </label>
-        </div>
 
-        <!-- Option D -->
-        <div class="mcq-option">
-          <input type="radio"
-       id="optD"
-       name="selectedAnswer"
-       value="D"
-       th:checked="${selectedAnswer == 'D'}">
-            <label class="mb-0 fw-semibold text-dark w-100"
-                   for="optD"
-                   th:text="'D) ' + ${questionList[currentIndex].optionD}">
-                Option D
-            </label>
-        </div>
+<!-- Option B -->
+<div class="mcq-option">
+    <input type="radio"
+           id="optB"
+           name="selectedAnswer"
+           value="B"
+           th:checked="${selectedAnswer == 'B'}">
 
+    <label class="mb-0 fw-semibold text-dark w-100"
+           for="optB"
+           th:text="'B) ' + ${currentQuestion.optionB}">
+        Option B
+    </label>
+</div>
+
+
+<!-- Option C -->
+<div class="mcq-option">
+    <input type="radio"
+           id="optC"
+           name="selectedAnswer"
+           value="C"
+           th:checked="${selectedAnswer == 'C'}">
+
+    <label class="mb-0 fw-semibold text-dark w-100"
+           for="optC"
+           th:text="'C) ' + ${currentQuestion.optionC}">
+        Option C
+    </label>
+</div>
+
+
+<!-- Option D -->
+<div class="mcq-option">
+    <input type="radio"
+           id="optD"
+           name="selectedAnswer"
+           value="D"
+           th:checked="${selectedAnswer == 'D'}">
+
+    <label class="mb-0 fw-semibold text-dark w-100"
+           for="optD"
+           th:text="'D) ' + ${currentQuestion.optionD}">
+        Option D
+    </label>
+</div>
     </div>
 </div>
                         
                         <!-- Navigation Action Buttons inside Card -->
               <div class="d-flex align-items-center justify-content-between border-top border-gray-100 pt-4">
-
-  
-   
-
-    <!-- Mark -->
-    <button type="button"
-            class="btn btn-outline-warning px-3 py-2 rounded-3">
-        <i class="far fa-bookmark me-1"></i> Mark for Review
-    </button>
-
-    <!-- Next -->
-  <button th:if="${currentIndex < questionList.size()-1}"
-        type="submit"
-        formaction="/student/exam/save"
-        name="nextIndex"
-        th:value="${currentIndex+1}"
-        class="btn btn-primary">
-    Save & Next
-</button>
-
-  <!-- Previous -->
-<button th:if="${currentIndex > 0}"
-        type="submit"
-        formaction="/student/exam/previous"
-        name="prevIndex"
-        th:value="${currentIndex-1}"
-        class="btn btn-secondary">
-    Previous
-</button>
-    <!-- Submit -->
-   <button th:if="${currentIndex == questionList.size()-1}"
-        type="submit"
-        class="btn btn-success px-4 py-2 rounded-3">
-    Submit Exam
-</button>
-
-</div>
+					    <!-- Mark -->
+					    <button type="button"
+					            class="btn btn-outline-warning px-3 py-2 rounded-3">
+					        <i class="far fa-bookmark me-1"></i> Mark for Review
+					    </button>
+					
+					    <!-- Next -->
+					  <button th:if="${currentIndex < questionList.size()-1}"
+					        type="submit"
+					        formaction="/student/exam/save"
+					        name="nextIndex"
+					        th:value="${currentIndex+1}"
+					        class="btn btn-primary">
+					    Save & Next
+					</button>
+					
+					  <!-- Previous -->
+					<button th:if="${currentIndex > 0}"
+					        type="submit"
+					        formaction="/student/exam/previous"
+					        name="prevIndex"
+					        th:value="${currentIndex-1}"
+					        class="btn btn-secondary">
+					    Previous
+					</button>
+					    <!-- Submit -->
+					   <button th:if="${currentIndex == questionList.size()-1}"
+					        type="submit"
+					        formaction="/student/exam/submit"
+					        class="btn btn-success px-4 py-2 rounded-3">
+					    Submit Exam
+					</button>
+					
+					</div>
                 
                 <!-- RIGHT COLUMN: PROCTORED METRICS PANEL (Timer & Navigator) -->
                 <div class="col-lg-4">

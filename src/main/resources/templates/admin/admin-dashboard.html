@@ -107,54 +107,78 @@
                             </div>
                             
                             <div class="table-responsive">
-                                <table class="table table-hover align-middle mb-0" style="font-size: 0.9rem;">
-                                    <thead class="table-light text-gray-500" style="font-size: 0.85rem;">
-                                        <tr>
-                                            <th>Student Name</th>
-                                            <th>Exam Title</th>
-                                            <th>Submission Date</th>
-                                            <th>Obtained Score</th>
-                                            <th>Pass/Fail</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Loop placeholder -->
-                                        <tr th:each="attempt : ${recentAttempts}">
-                                            <td class="fw-bold text-dark" th:text="${attempt.studentName}">Sam Parker</td>
-                                            <td th:text="${attempt.examTitle}">Core Java Basics</td>
-                                            <td th:text="${attempt.date}">2026-05-30</td>
-                                            <td class="fw-semibold text-dark" th:text="${attempt.score}">45 / 50</td>
-                                            <td>
-                                                <span class="badge bg-success-light text-success rounded-pill px-2.5 py-1" th:if="${attempt.passed}">Passed</span>
-                                                <span class="badge bg-danger-light text-danger rounded-pill px-2.5 py-1" th:unless="${attempt.passed}">Failed</span>
-                                            </td>
-                                        </tr>
-                                        <!-- Static Fallbacks -->
-                                        <tr th:if="${recentAttempts == null}">
-                                            <td class="fw-bold text-dark">Sam Parker</td>
-                                            <td>Core Java Programming</td>
-                                            <td>May 30, 2026</td>
-                                            <td class="fw-semibold text-dark">45 / 50 (90%)</td>
-                                            <td><span class="badge bg-success-light text-success rounded-pill px-2.5 py-1">Passed</span></td>
-                                        </tr>
-                                        <tr th:if="${recentAttempts == null}">
-                                            <td class="fw-bold text-dark">Amanda Ross</td>
-                                            <td>SQL Queries & DB Admin</td>
-                                            <td>May 30, 2026</td>
-                                            <td class="fw-semibold text-dark">36 / 50 (72%)</td>
-                                            <td><span class="badge bg-success-light text-success rounded-pill px-2.5 py-1">Passed</span></td>
-                                        </tr>
-                                        <tr th:if="${recentAttempts == null}">
-                                            <td class="fw-bold text-dark">Mark Henderson</td>
-                                            <td>Data Structures & Algorithms</td>
-                                            <td>May 29, 2026</td>
-                                            <td class="fw-semibold text-dark">18 / 50 (36%)</td>
-                                            <td><span class="badge bg-danger-light text-danger rounded-pill px-2.5 py-1">Failed</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+    <table class="table table-hover align-middle mb-0"
+           style="font-size: 0.9rem;">
+
+        <thead class="table-light text-gray-500"
+               style="font-size: 0.85rem;">
+            <tr>
+                <th>Student Name</th>
+                <th>Exam Title</th>
+                <th>Submission Date</th>
+                <th>Obtained Score</th>
+                <th>Pass/Fail</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <!-- Dynamic Result Data -->
+            <tr th:each="attempt : ${recentResults}">
+
+                <td class="fw-bold text-dark"
+                    th:text="${attempt.studentName}">
+                    Student Name
+                </td>
+
+                <td th:text="${attempt.examName}">
+                    Exam Name
+                </td>
+
+                <td th:text="${attempt.date}">
+                    Date
+                </td>
+
+                <td class="fw-semibold text-dark"
+                    th:text="${attempt.scoreString}">
+                    45 / 50 (90%)
+                </td>
+
+                <td>
+
+                    <span class="badge bg-success-light 
+                                 text-success rounded-pill px-2.5 py-1"
+                          th:if="${attempt.passed}">
+                        Passed
+                    </span>
+
+                    <span class="badge bg-danger-light 
+                                 text-danger rounded-pill px-2.5 py-1"
+                          th:unless="${attempt.passed}">
+                        Failed
+                    </span>
+
+                </td>
+
+            </tr>
+
+
+            <!-- No Result Found -->
+            <tr th:if="${#lists.isEmpty(recentResults)}">
+
+                <td colspan="5"
+                    class="text-center text-muted py-4">
+
+                    No exam submissions available.
+
+                </td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+</div></div>
                     </div>
                     
                     <!-- Right Column: System Logs & Recent Activities -->

@@ -118,9 +118,9 @@
                                         <tr th:each="res : ${recentResults}">
                                             <td>
                                                 <div class="fw-bold text-dark" th:text="${res.examName}">Java Development Basics</div>
-                                                <small class="text-gray-400" th:text="${res.category}">Coding & Core</small>
+                                               <small class="text-gray-400" th:text="${res.examName}">Online Exam</small>
                                             </td>
-                                            <td th:text="${res.dateString}">May 28, 2026</td>
+                                           <td th:text="${res.date}">May 28, 2026</td>
                                             <td th:text="${res.scoreString}">42 / 50</td>
                                             <td class="fw-semibold text-dark" th:text="${res.percent}">84%</td>
                                             <td>
