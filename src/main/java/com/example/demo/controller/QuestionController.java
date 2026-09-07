@@ -1,5 +1,9 @@
 package com.example.demo.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import com.example.demo.entity.Exam;
 import com.example.demo.entity.Question;
 import com.example.demo.service.QuestionService;
 
@@ -23,13 +28,30 @@ public class QuestionController {
     @GetMapping("/admin/manage-questions")
     public String manageQuestions(Model model) {
 
-        model.addAttribute(
-                "questionsList",
-                questionService.getAllQuestions());
+        // 1. सर्व exams मिळवा
+        List<Exam> exams = examService.getAllExams();
 
-        model.addAttribute(
-                "exams",
-                examService.getAllExams());
+        // 2. प्रत्येक exam चे questions वेगळे करा
+        Map<Integer, List<Question>> questionsByExam = new HashMap<>();
+
+        for (Exam exam : exams) {
+
+            List<Question> examQuestions =
+                    questionService.getQuestionsByExamId(exam.getId());
+
+            questionsByExam.put(
+                    exam.getId(),
+                    examQuestions
+            );
+        }
+
+        // 3. Thymeleaf ला data पाठवा
+        model.addAttribute("exams", exams);
+        model.addAttribute("questionsByExam", questionsByExam);
+
+        // 4. Console debugging
+        System.out.println("EXAMS = " + exams.size());
+        System.out.println("QUESTIONS BY EXAM = " + questionsByExam);
 
         return "admin/manage-questions";
     }

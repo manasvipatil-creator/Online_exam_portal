@@ -40,5 +40,9 @@ public class QuestionService {
 	public List<Question> getQuestionsByExamId(int examId) {
 	    return questionRepository.findByExamId(examId);
 	}
+	
+	public long getQuestionCountByExamId(int examId) {
+	    return questionRepository.countByExamId(examId);
+	}
 
 }

@@ -40,4 +40,25 @@ public class ExamService {
     public Exam getExamById(int id) {
         return examRepository.findById(id).orElse(null);
     }
+    
+    public void deleteExam(int id) {           //delete functinality
+		 examRepository.deleteById(id);
+	}
+	
+	public void updateExam(Exam exam) {         //edit functionality
+	    examRepository.save(exam);
+	}
+    
+    public List<Exam> searchExam(String keyword){
+
+        if(keyword == null || keyword.isBlank()){
+            return examRepository.findAll();
+        }
+
+        return examRepository.findByexamNameContainingIgnoreCase(keyword);
+    }
+
+	
+    
+    
 }

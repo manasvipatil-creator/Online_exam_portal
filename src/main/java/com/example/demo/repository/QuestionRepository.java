@@ -9,5 +9,6 @@ import com.example.demo.entity.Question;
 public interface QuestionRepository extends JpaRepository<Question,Integer>{
 	
 	 List<Question> findByExamId(int examId);
+	 long countByExamId(int examId);
 
 }

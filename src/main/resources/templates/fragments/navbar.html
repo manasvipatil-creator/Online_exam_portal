@@ -153,11 +153,14 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a th:href="@{/admin/exams}" href="/admin/manage-exams.html" 
-                   th:classappend="${activePage == 'exams'} ? 'active' : ''" class="nav-link">
-                    <i class="fas fa-folder-plus"></i>
-                    <span>Manage Exams</span>
-                </a>
+               <a th:href="@{/admin/manage-exams}"
+				   th:classappend="${activePage == 'exams'} ? 'active' : ''"
+				   class="nav-link">
+				    
+				    <i class="fas fa-folder-plus"></i>
+				    <span>Manage Exams</span>
+				
+				</a>
             </li>
             <li class="nav-item">
                 <a th:href="@{/admin/manage-questions}" 
@@ -214,11 +217,17 @@
         
         <div class="d-flex align-items-center gap-3">
             <!-- Search Widget -->
-            <div class="search-widget d-none d-lg-block position-relative">
-                <input type="text" class="form-control bg-light border-0 rounded-pill px-4 py-2" placeholder="Search exams, users..." style="font-size: 0.85rem; width: 240px; text-indent: 10px;">
-                <i class="fas fa-search position-absolute text-gray-400" style="left: 15px; top: 13px; font-size: 0.85rem;"></i>
-            </div>
-            
+         <form th:action="@{/admin/manage-exams}" method="get" class="search-box" id="examSearchForm">
+
+    <i class="fas fa-search"></i>
+
+    <input type="text"
+           id="examSearch"
+           name="keyword"
+           placeholder="Search exams, users..."
+           th:value="${param.keyword}">
+
+</form>
             <!-- Quick Notifications Icon -->
             <div class="dropdown">
     <button class="btn btn-light rounded-circle p-2 position-relative"
@@ -299,6 +308,11 @@
 </span>
         </div>
     </header>
+    
+    
+    
+    
+ 
 
 </body>
 </html>
