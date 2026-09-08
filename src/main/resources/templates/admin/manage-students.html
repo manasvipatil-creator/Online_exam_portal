@@ -6,6 +6,183 @@
     <title>Manage Registered Students - Admin Panel</title>
     <!-- Fragments Styles -->
     <th:block th:replace="~{fragments/footer :: styles}"></th:block>
+   <style>
+
+    /* ================================
+       STUDENT TABLE
+    ================================= */
+
+    .student-table {
+        width: 100%;
+        white-space: nowrap;
+    }
+
+    .student-table th,
+    .student-table td {
+        vertical-align: middle;
+    }
+
+    /* Status column */
+    .student-table th:nth-child(6),
+    .student-table td:nth-child(6) {
+        width: 100px;
+        text-align: center;
+    }
+
+    /* Action column */
+    .student-table th:nth-child(7),
+    .student-table td:nth-child(7) {
+        width: 150px;
+        text-align: center;
+    }
+
+
+    /* ================================
+       ACTION BUTTONS
+    ================================= */
+
+    .student-actions {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .student-action-btn {
+        width: 34px;
+        height: 34px;
+        padding: 0;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        border: none;
+        border-radius: 8px;
+
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+
+
+    /* ================================
+       VIEW BUTTON
+    ================================= */
+
+    .student-view-btn {
+        background: #eef6ff;
+        color: #0d6efd;
+    }
+
+    .student-view-btn:hover {
+        background: #0d6efd;
+        color: #ffffff;
+        transform: translateY(-1px);
+    }
+
+
+    /* ================================
+       SUSPEND BUTTON
+    ================================= */
+
+    .student-suspend-btn {
+        background: #fff4e6;
+        color: #fd7e14;
+    }
+
+    .student-suspend-btn:hover {
+        background: #fd7e14;
+        color: #ffffff;
+        transform: translateY(-1px);
+    }
+
+
+    /* ================================
+       ACTIVATE BUTTON
+    ================================= */
+
+    .student-activate-btn {
+        background: #eaf8f0;
+        color: #198754;
+    }
+
+    .student-activate-btn:hover {
+        background: #198754;
+        color: #ffffff;
+        transform: translateY(-1px);
+    }
+
+
+    /* ================================
+       DELETE BUTTON
+    ================================= */
+
+    .student-delete-btn {
+        background: #fff0f0;
+        color: #dc3545;
+    }
+
+    .student-delete-btn:hover {
+        background: #dc3545;
+        color: #ffffff;
+        transform: translateY(-1px);
+    }
+
+
+    /* ================================
+       STATUS BADGES
+    ================================= */
+
+    .student-status-active {
+        background: #198754;
+        color: #ffffff;
+        border-radius: 6px;
+        padding: 4px 9px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .student-status-suspended {
+        background: #dc3545;
+        color: #ffffff;
+        border-radius: 6px;
+        padding: 4px 9px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+
+    /* ================================
+       TABLE HOVER
+    ================================= */
+
+    .student-table tbody tr {
+        transition: background-color 0.2s ease;
+    }
+
+    .student-table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+
+    /* ================================
+       MOBILE RESPONSIVE
+    ================================= */
+
+    @media (max-width: 768px) {
+
+        .student-table {
+            min-width: 900px;
+        }
+
+        .student-action-btn {
+            width: 32px;
+            height: 32px;
+        }
+
+    }
+
+</style>
 </head>
 <body>
 
@@ -31,19 +208,25 @@
                     <div class="col-6 col-md-3">
                         <div class="p-3 bg-white rounded-4 shadow-sm border border-gray-100">
                             <span class="text-gray-500 d-block fs-7 uppercase fw-bold mb-1">Total Registrations</span>
-                            <h4 class="fw-bold text-dark mb-0">350 Users</h4>
+                           <h4 class="fw-bold text-dark mb-0">
+							    <span th:text="${totalStudents}">0</span> Users
+							</h4>
                         </div>
                     </div>
                     <div class="col-6 col-md-3">
                         <div class="p-3 bg-white rounded-4 shadow-sm border border-gray-100">
                             <span class="text-gray-500 d-block fs-7 uppercase fw-bold mb-1">Verified Accounts</span>
-                            <h4 class="fw-bold text-success mb-0">342 Active</h4>
+                           <h4 class="fw-bold text-success mb-0">
+							    <span th:text="${activeStudents}">0</span> Active
+							</h4>
                         </div>
                     </div>
                     <div class="col-6 col-md-3">
                         <div class="p-3 bg-white rounded-4 shadow-sm border border-gray-100">
                             <span class="text-gray-500 d-block fs-7 uppercase fw-bold mb-1">Suspended Slots</span>
-                            <h4 class="fw-bold text-danger mb-0">8 Blocked</h4>
+                            <h4 class="fw-bold text-danger mb-0">
+							    <span th:text="${suspendedStudents}">0</span> Blocked
+							</h4>
                         </div>
                     </div>
                     <div class="col-6 col-md-3">
@@ -69,117 +252,104 @@
                     </div>
                     
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0" style="font-size: 0.9rem;">
-                            <thead class="table-light text-gray-500" style="font-size: 0.85rem;">
-                                <tr>
-                                    <th>Student ID</th>
-                                    <th>Full Name</th>
-                                    <th>Email Address</th>
-                                    <th>Mobile Number</th>
-                                    <th>Registered Date</th>
-                                    <th>System Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Dynamic loop standard -->
-                                <tr th:each="student : ${studentsList}">
-                                    <td class="fw-bold text-primary" th:text="${student.id}">STU-2026-9804</td>
-                                    <td>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <div class="avatar rounded-circle bg-primary-light text-primary d-flex align-items-center justify-content-center fw-bold" style="width: 32px; height: 32px; font-size: 0.75rem;">
-                                                SP
-                                            </div>
-                                            <span class="fw-bold text-dark" th:text="${student.fullName}">Sam Parker</span>
-                                        </div>
-                                    </td>
-                                    <td th:text="${student.email}">sam.parker@university.edu</td>
-                                    <td th:text="${student.mobileNumber}">9876543210</td>
-                                   <td>Not Available</td>
-                                    <td>
-                                       <span class="badge bg-success">
-										        Active
-										    </span>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex gap-2">
-                                            <a th:href="@{'/admin/students/details/' + ${student.id}}" class="btn btn-light btn-sm text-primary" title="View Details"><i class="fas fa-eye"></i></a>
-												<a href="#"
-												   class="btn btn-light btn-sm text-danger"
-												   th:onclick="'confirmDelete(' + ${student.id} + ')'">
-												    <i class="fas fa-user-minus"></i>
-												</a>
+                     <table class="table table-hover align-middle mb-0 student-table"
+       style="font-size: 0.9rem;">
+    <thead class="table-light text-gray-500" style="font-size: 0.85rem;">
+        <tr>
+            <th>Student ID</th>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Mobile Number</th>
+            <th>Registered Date</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
 
-   
-                                        </div>
-                                    </td>
-                                </tr>
-                                <!-- Static fallbacks -->
-                                <tr th:if="${studentsList == null}">
-                                    <td class="fw-bold text-primary">STU-2026-9804</td>
-                                    <td>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <div class="avatar rounded-circle bg-primary-light text-primary d-flex align-items-center justify-content-center fw-bold" style="width: 32px; height: 32px; font-size: 0.75rem;">
-                                                SP
-                                            </div>
-                                            <span class="fw-bold text-dark">Sam Parker</span>
-                                        </div>
-                                    </td>
-                                    <td>sam.parker@university.edu</td>
-                                    <td>9876543210</td>
-                                    <td>March 14, 2026</td>
-                                    <td><span class="badge bg-success-light text-success rounded-pill px-2.5 py-1">Active</span></td>
-                                    <td>
-                                        <div class="d-flex gap-2">
-                                            <button class="btn btn-light btn-sm text-primary" title="View Details"><i class="fas fa-eye"></i></button>
-                                            <button class="btn btn-light btn-sm text-danger" title="Delete Profile"><i class="fas fa-user-minus"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr th:if="${studentsList == null}">
-                                    <td class="fw-bold text-primary">STU-2026-1402</td>
-                                    <td>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <div class="avatar rounded-circle bg-secondary-light text-secondary d-flex align-items-center justify-content-center fw-bold" style="width: 32px; height: 32px; font-size: 0.75rem;">
-                                                AR
-                                            </div>
-                                            <span class="fw-bold text-dark">Amanda Ross</span>
-                                        </div>
-                                    </td>
-                                    <td>amanda.ross@university.edu</td>
-                                    <td>9123456780</td>
-                                    <td>March 20, 2026</td>
-                                    <td><span class="badge bg-success-light text-success rounded-pill px-2.5 py-1">Active</span></td>
-                                    <td>
-                                        <div class="d-flex gap-2">
-                                            <button class="btn btn-light btn-sm text-primary" title="View Details"><i class="fas fa-eye"></i></button>
-                                            <button class="btn btn-light btn-sm text-danger" title="Delete Profile"><i class="fas fa-user-minus"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr th:if="${studentsList == null}">
-                                    <td class="fw-bold text-primary">STU-2026-8095</td>
-                                    <td>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <div class="avatar rounded-circle bg-warning-light text-warning d-flex align-items-center justify-content-center fw-bold" style="width: 32px; height: 32px; font-size: 0.75rem;">
-                                                MH
-                                            </div>
-                                            <span class="fw-bold text-dark">Mark Henderson</span>
-                                        </div>
-                                    </td>
-                                    <td>mark.h@university.edu</td>
-                                    <td>8976543120</td>
-                                    <td>March 25, 2026</td>
-                                    <td><span class="badge bg-danger-light text-danger rounded-pill px-2.5 py-1">Suspended</span></td>
-                                    <td>
-                                        <div class="d-flex gap-2">
-                                            <button class="btn btn-light btn-sm text-primary" title="View Details"><i class="fas fa-eye"></i></button>
-                                            <button class="btn btn-light btn-sm text-danger" title="Delete Profile"><i class="fas fa-user-minus"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+    <tbody>
+
+        <tr th:each="student : ${students}">
+
+            <td class="fw-bold text-primary"
+                th:text="${student.id}">
+                1
+            </td>
+
+            <td>
+                <span class="fw-bold text-dark"
+                      th:text="${student.fullName}">
+                    Student Name
+                </span>
+            </td>
+
+            <td th:text="${student.email}">
+                student@gmail.com
+            </td>
+
+            <td th:text="${student.mobileNumber}">
+                9876543210
+            </td>
+
+            <td th:text="${student.registeredDate}">
+                2026-09-08
+            </td>
+
+            <td>
+               <td>
+   <span th:if="${student.status == 'ACTIVE'}"
+      class="student-status-active">
+    Active
+</span>
+
+<span th:if="${student.status == 'SUSPENDED'}"
+      class="student-status-suspended">
+    Suspended
+</span>
+</td>
+            </td>
+
+          <td>
+   <div class="student-actions">
+
+    <a th:href="@{'/admin/students/details/' + ${student.id}}"
+       class="student-action-btn student-view-btn"
+       title="View Details">
+        <i class="fas fa-eye"></i>
+    </a>
+
+    <a th:href="@{'/admin/students/status/' + ${student.id}}"
+       th:class="${student.status == 'ACTIVE'}
+           ? 'student-action-btn student-suspend-btn'
+           : 'student-action-btn student-activate-btn'"
+       th:title="${student.status == 'ACTIVE'}
+           ? 'Suspend Student'
+           : 'Activate Student'"
+       th:onclick="${student.status == 'ACTIVE'}
+           ? 'return confirm(\'Suspend this student?\');'
+           : 'return confirm(\'Activate this student?\');'">
+
+        <i th:class="${student.status == 'ACTIVE'}
+            ? 'fas fa-user-slash'
+            : 'fas fa-user-check'">
+        </i>
+    </a>
+
+    <a th:href="@{'/admin/students/delete/' + ${student.id}}"
+       class="student-action-btn student-delete-btn"
+       title="Delete Student"
+       onclick="return confirm('Are you sure you want to delete this student?');">
+
+        <i class="fas fa-trash-alt"></i>
+    </a>
+
+</div>
+</td>
+
+        </tr>
+
+    </tbody>
+
+</table>
                     </div>
                 </div>
             </div>

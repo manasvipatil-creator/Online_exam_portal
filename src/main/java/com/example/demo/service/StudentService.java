@@ -38,6 +38,20 @@ public class StudentService {
 		    return studentRepository.findAll();
 		}
 	 
+	 public long getStudentCount() {
+
+		    return studentRepository.count();
+		}
+	 
+	 public long getActiveStudentCount() {
+		    return studentRepository.countByStatus("ACTIVE");
+		}
+
+		public long getSuspendedStudentCount() {
+		    return studentRepository.countByStatus("SUSPENDED");
+		}
+	
+	 
 	 public Student getStudentById(int id) {        //for view student details in admin manage student
 
 		    return studentRepository
@@ -49,4 +63,21 @@ public class StudentService {
 
 		    studentRepository.deleteById(id);
 		}
+	 
+	 public void changeStudentStatus(int id) {
+
+		    Student student = studentRepository.findById(id).orElse(null);
+
+		    if (student != null) {
+
+		        if ("ACTIVE".equals(student.getStatus())) {
+		            student.setStatus("SUSPENDED");
+		        } else {
+		            student.setStatus("ACTIVE");
+		        }
+
+		        studentRepository.save(student);
+		    }
+		}
 }
+

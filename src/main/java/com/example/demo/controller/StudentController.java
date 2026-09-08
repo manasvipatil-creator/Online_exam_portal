@@ -57,8 +57,11 @@ public class StudentController {
 	
 	@PostMapping("/student/register")           //
 	public String registerStudent(@ModelAttribute Student student ) {
+		student.setRegisteredDate(java.time.LocalDate.now());
 		boolean result = studentService.registerStudent(student);
 		return "student/register";
+	
+	
 	}
 	
 	@PostMapping("/student/login")
@@ -442,6 +445,12 @@ public class StudentController {
 	    return "redirect:/student/exam/start/"
 	            + examId + "/" + prevIndex;
 	}	
+	
+	
+	
+	
+	
+	
 	@GetMapping("/student/profile")
 	public String profile(HttpSession session,
 	                      Model model) {

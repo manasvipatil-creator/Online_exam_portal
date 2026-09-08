@@ -11,6 +11,7 @@ import com.example.demo.service.ExamService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.example.demo.entity.Exam;
 import com.example.demo.entity.Question;
@@ -27,6 +28,8 @@ public class QuestionController {
 
     @GetMapping("/admin/manage-questions")
     public String manageQuestions(Model model) {
+    	
+    	model.addAttribute("question", new Question());
 
         // 1. सर्व exams मिळवा
         List<Exam> exams = examService.getAllExams();
@@ -62,6 +65,49 @@ public class QuestionController {
         System.out.println("ADD QUESTION METHOD CALLED");
 
         questionService.addQuestion(question);
+
+        return "redirect:/admin/manage-questions";
+    }
+    
+    @PostMapping("/admin/questions/update")
+    public String updateQuestion(@ModelAttribute Question question) {
+
+        System.out.println("UPDATE QUESTION METHOD CALLED");
+
+        questionService.updateQuestion(question);
+
+        return "redirect:/admin/manage-questions";
+    }
+    
+    @GetMapping("/admin/questions/edit/{id}")
+    public String editQuestion(
+            @PathVariable int id,
+            Model model) {
+
+        Question question = questionService.getQuestionById(id);
+
+        List<Exam> exams = examService.getAllExams();
+
+        Map<Integer, List<Question>> questionsByExam = new HashMap<>();
+
+        for (Exam exam : exams) {
+            questionsByExam.put(
+                    exam.getId(),
+                    questionService.getQuestionsByExamId(exam.getId())
+            );
+        }
+
+        model.addAttribute("question", question);
+        model.addAttribute("exams", exams);
+        model.addAttribute("questionsByExam", questionsByExam);
+
+        return "admin/manage-questions";
+    }
+    
+    @GetMapping("/admin/questions/delete/{id}")
+    public String deleteQuestion(@PathVariable int id) {
+
+        questionService.deleteQuestion(id);
 
         return "redirect:/admin/manage-questions";
     }

@@ -32,22 +32,40 @@ public class AdminController {
     @Autowired
     private QuestionService questionService;
     
+    
+    
     @GetMapping("/admin/manage-students")
     public String manageStudents(Model model) {
 
         model.addAttribute(
-                "studentsList",
+                "students",
                 studentService.getAllStudents());
+
+        model.addAttribute(
+                "totalStudents",
+                studentService.getStudentCount());
+
+        model.addAttribute(
+                "activeStudents",
+                studentService.getActiveStudentCount());
+
+        model.addAttribute(
+                "suspendedStudents",
+                studentService.getSuspendedStudentCount());
 
         return "admin/manage-students";
     }
-
+    
+    
+    
 
     @GetMapping("/admin/login")
     public String loginPage() {
 
     	 return "admin/admin-login";
     }
+    
+    
 
     @PostMapping("/admin/login")
     public String loginAdmin(
@@ -71,6 +89,8 @@ public class AdminController {
 
         return "redirect:/admin/login?error";
     }
+    
+    
 
     @GetMapping("/admin/dashboard")
     public String dashboard(HttpSession session,
@@ -108,6 +128,8 @@ public class AdminController {
         return "admin/admin-dashboard";
     }
     
+    
+    
     @GetMapping("/admin/students/details/{id}")
     public String viewStudent(
             @PathVariable int id,
@@ -120,6 +142,8 @@ public class AdminController {
         return "admin/student-details";
     }
     
+    
+    
     @GetMapping("/admin/students/delete/{id}")
     public String deleteStudent(
             @PathVariable int id) {
@@ -128,6 +152,16 @@ public class AdminController {
 
         return "redirect:/admin/manage-students";
     }
+    
+    @GetMapping("/admin/students/status/{id}")
+    public String changeStudentStatus(@PathVariable int id) {
+
+        studentService.changeStudentStatus(id);
+
+        return "redirect:/admin/manage-students";
+    }
+    
+    
     
     @GetMapping("/admin/manage-results")
     public String manageResults(Model model) {

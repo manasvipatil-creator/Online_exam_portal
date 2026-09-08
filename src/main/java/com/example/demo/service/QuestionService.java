@@ -44,5 +44,12 @@ public class QuestionService {
 	public long getQuestionCountByExamId(int examId) {
 	    return questionRepository.countByExamId(examId);
 	}
+	public void updateQuestion(Question question) {
+	    questionRepository.save(question);
+	}
+	
+	public void deleteQuestion(int id) {
+	    questionRepository.deleteById(id);
+	}
 
 }

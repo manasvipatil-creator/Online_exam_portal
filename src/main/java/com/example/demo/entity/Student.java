@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.Column;
+import java.time.LocalDate;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,7 +22,25 @@ public class Student {
 	@Column
 	private String password;
 	
+	@Column
+	private String status = "ACTIVE";
 	
+	@Column
+	private LocalDate registeredDate;
+	
+	
+	public LocalDate getRegisteredDate() {
+		return registeredDate;
+	}
+	public void setRegisteredDate(LocalDate registeredDate) {
+		this.registeredDate = registeredDate;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
 	public int getId() {
 		return id;
 	}
