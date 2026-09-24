@@ -31,26 +31,38 @@
                     <div class="col-6 col-md-3">
                         <div class="p-3 bg-white rounded-4 shadow-sm border border-gray-100">
                             <span class="text-gray-500 d-block fs-7 uppercase fw-bold mb-1">Attempts Logged</span>
-                            <h4 class="fw-bold text-dark mb-0">1,240 Total</h4>
+                            <h4 class="fw-bold text-dark mb-0"><h4 class="fw-bold text-dark mb-0">
+								    <span th:text="${totalResults}">0</span> Total
+								</h4></h4>
                         </div>
                     </div>
                     <div class="col-6 col-md-3">
                         <div class="p-3 bg-white rounded-4 shadow-sm border border-gray-100">
                             <span class="text-gray-500 d-block fs-7 uppercase fw-bold mb-1">Average Percentage</span>
-                            <h4 class="fw-bold text-primary mb-0">78.4% Avg</h4>
-                        </div>
+                            <h4 class="fw-bold text-primary mb-0"><h4 class="fw-bold text-primary mb-0">
+							    <span th:text="${#numbers.formatDecimal(averagePercentage, 1, 1)}">0.0</span>% Avg
+							</h4></h4>
+							                        </div>
                     </div>
                     <div class="col-6 col-md-3">
                         <div class="p-3 bg-white rounded-4 shadow-sm border border-gray-100">
                             <span class="text-gray-500 d-block fs-7 uppercase fw-bold mb-1">Passing Ratio</span>
-                            <h4 class="fw-bold text-success mb-0">84.2% Passed</h4>
-                        </div>
+                            <h4 class="fw-bold text-success mb-0"><h4 class="fw-bold text-success mb-0">
+						    <span th:text="${#numbers.formatDecimal(passingRatio, 1, 1)}">
+						        0.0
+						    </span>% Passed
+						</h4></h4>
+						                        </div>
                     </div>
                     <div class="col-6 col-md-3">
                         <div class="p-3 bg-white rounded-4 shadow-sm border border-gray-100">
                             <span class="text-gray-500 d-block fs-7 uppercase fw-bold mb-1">Highest Score</span>
-                            <h4 class="fw-bold text-warning mb-0">100 / 100</h4>
-                        </div>
+                            <h4 class="fw-bold text-warning mb-0"><h4 class="fw-bold text-warning mb-0">
+								    <span th:text="${#numbers.formatDecimal(highestScore, 1, 0)}">
+								        0
+								    </span>/100
+								</h4></h4>
+						 </div>
                     </div>
                 </div>
                 
@@ -63,27 +75,40 @@
                         <div class="d-flex flex-wrap align-items-center gap-2">
                             <!-- Search -->
                             <div class="position-relative" style="max-width: 200px;">
-                                <input type="text" class="form-control py-2 px-3 rounded-pill bg-light border-0" placeholder="Student name..." style="font-size: 0.85rem; text-indent: 10px;">
+                                <input type="text" id="resultStudentSearch" class="form-control py-2 px-3 rounded-pill bg-light border-0" placeholder="Student name..." style="font-size: 0.85rem; text-indent: 10px;">
                                 <i class="fas fa-search position-absolute text-gray-400" style="left: 10px; top: 12px; font-size: 0.85rem;"></i>
                             </div>
                             
                             <!-- Subject Filter -->
-                            <select class="form-select py-1.5 px-3 bg-light border-0 rounded-pill" style="font-size: 0.85rem; width: max-content;">
-                                <option selected>All Subjects</option>
-                                <option>Core Java Programming</option>
-                                <option>SQL Queries & DB Admin</option>
-                                <option>Data Structures & Algorithms</option>
-                            </select>
-                            
+                           <select id="resultSubjectFilter"
+						        class="form-select py-1.5 px-3 bg-light border-0 rounded-pill"
+						        style="font-size: 0.85rem; width: max-content;">
+						
+						    <option value="ALL" selected>
+						        All Subjects
+						    </option>
+						
+						    <option th:each="examName : ${examNames}"
+						            th:value="${examName}"
+						            th:text="${examName}">
+						    </option>
+						
+						</select>
+						                            
                             <!-- Export Button -->
-                            <button onclick="alert('Exporting Results ledger as standard CSV format...');" class="btn btn-outline-primary btn-sm px-3 rounded-pill">
-                                <i class="fas fa-file-csv me-1"></i> Export CSV
-                            </button>
+                           <button type="button"
+							        onclick="exportResultsCSV();"
+							        class="btn btn-outline-primary btn-sm px-3 rounded-pill">
+							
+							    <i class="fas fa-file-csv me-1"></i>
+							    Export CSV
+							
+							</button>
                         </div>
                     </div>
                     
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0" style="font-size: 0.9rem;">
+                        <table id="resultsTable"  class="table table-hover align-middle mb-0" style="font-size: 0.9rem;">
                             <thead class="table-light text-gray-500" style="font-size: 0.85rem;">
                                 <tr>
                                     <th>Student Name</th>
@@ -95,7 +120,7 @@
                                     <th>Status</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="resultsTableBody">
                                 <!-- Dynamic loop standard -->
                                 <tr th:each="res : ${resultsLedger}">
                                     <td class="fw-bold text-dark" th:text="${res.studentName}">Sam Parker</td>
@@ -156,5 +181,204 @@
 
     <!-- Scripts Fragment -->
     <th:block th:replace="~{fragments/footer :: scripts}"></th:block>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchInput =
+        document.getElementById("resultStudentSearch");
+
+    const subjectFilter =
+        document.getElementById("resultSubjectFilter");
+
+    const tableBody =
+        document.getElementById("resultsTableBody");
+
+    if (!searchInput || !subjectFilter || !tableBody) return;
+
+
+    function filterResults() {
+
+        const keyword =
+            searchInput.value.toLowerCase().trim();
+
+        const selectedSubject =
+            subjectFilter.value.toLowerCase().trim();
+
+
+        const rows =
+            tableBody.querySelectorAll("tr");
+
+
+        let found = false;
+
+
+        rows.forEach(function (row) {
+
+            const studentName =
+                row.cells[0]?.textContent
+                    .toLowerCase()
+                    .trim() || "";
+
+            const email =
+                row.cells[1]?.textContent
+                    .toLowerCase()
+                    .trim() || "";
+
+            const examName =
+                row.cells[2]?.textContent
+                    .toLowerCase()
+                    .trim() || "";
+
+
+            const matchesSearch =
+                studentName.includes(keyword) ||
+                email.includes(keyword);
+
+
+            const matchesSubject =
+                selectedSubject === "all" ||
+                examName === selectedSubject;
+
+
+            const shouldShow =
+                matchesSearch && matchesSubject;
+
+
+            row.style.display =
+                shouldShow ? "" : "none";
+
+
+            if (shouldShow) {
+                found = true;
+            }
+
+        });
+
+
+        // Remove old "Student not found" message
+        const oldMessage =
+            document.getElementById("studentNotFoundMessage");
+
+        if (oldMessage) {
+            oldMessage.remove();
+        }
+
+
+        // Show message only when user searched something
+        if (keyword !== "" && !found) {
+
+            const messageRow =
+                document.createElement("tr");
+
+            messageRow.id =
+                "studentNotFoundMessage";
+
+
+            messageRow.innerHTML = `
+                <td colspan="7"
+                    style="
+                        text-align: center;
+                        padding: 30px;
+                        color: #777;
+                        font-weight: 600;
+                    ">
+
+                    <i class="fas fa-user-slash me-2"
+                       style="color: #dc3545;">
+                    </i>
+
+                    Student not found
+
+                </td>
+            `;
+
+
+            tableBody.appendChild(messageRow);
+        }
+
+    }
+
+
+    searchInput.addEventListener(
+        "input",
+        filterResults
+    );
+
+
+    subjectFilter.addEventListener(
+        "change",
+        filterResults
+    );
+
+});
+</script>
+
+<script>
+window.exportResultsCSV = function () {
+
+    const table = document.getElementById("resultsTable");
+
+    if (!table) {
+        alert("Results table not found!");
+        return;
+    }
+
+    const rows = table.querySelectorAll("tr");
+
+    let csv = [];
+
+    rows.forEach(function (row) {
+
+        // Hidden rows export करू नका
+        if (row.style.display === "none") {
+            return;
+        }
+
+        const columns = row.querySelectorAll("th, td");
+
+        let rowData = [];
+
+        columns.forEach(function (column) {
+
+            let text = column.innerText
+                .replace(/\r?\n|\r/g, " ")
+                .replace(/"/g, '""')
+                .trim();
+
+            rowData.push('"' + text + '"');
+        });
+
+        if (rowData.length > 0) {
+            csv.push(rowData.join(","));
+        }
+
+    });
+
+    if (csv.length === 0) {
+        alert("No results available to export!");
+        return;
+    }
+
+    const csvFile = new Blob(
+        [csv.join("\n")],
+        { type: "text/csv;charset=utf-8;" }
+    );
+
+    const downloadLink = document.createElement("a");
+
+    const url = URL.createObjectURL(csvFile);
+
+    downloadLink.href = url;
+    downloadLink.download = "exam-results.csv";
+
+    document.body.appendChild(downloadLink);
+
+    downloadLink.click();
+
+    document.body.removeChild(downloadLink);
+
+    URL.revokeObjectURL(url);
+};
+</script>
 </body>
 </html>

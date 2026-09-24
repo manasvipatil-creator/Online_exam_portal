@@ -15,9 +15,17 @@ public interface StudentAnswerRepository
             int studentId,
             int questionId
     );
-    
-    
+
+    StudentAnswer findByStudentIdAndQuestionIdAndExamId(
+            int studentId,
+            int questionId,
+            int examId
+    );
+
     long countByStudentId(int studentId);
-    
+
     void deleteByStudentIdAndExamId(int studentId, int examId);
+    
+    
+    
 }

@@ -2,6 +2,8 @@ package com.example.demo.controller;
 import com.example.demo.service.ExamService;
 import com.example.demo.service.QuestionService;
 import com.example.demo.entity.Admin;
+import com.example.demo.entity.Exam;
+
 import org.springframework.ui.Model;
 import com.example.demo.service.AdminService;
 import com.example.demo.service.ResultService;
@@ -166,10 +168,35 @@ public class AdminController {
     @GetMapping("/admin/manage-results")
     public String manageResults(Model model) {
 
-        model.addAttribute(
-                "resultsLedger",
-                resultService.getAllResults());
+        model.addAttribute("resultsLedger", resultService.getAllResults());
 
+        model.addAttribute(
+            "totalResults",
+            resultService.getTotalResults()
+        );
+
+        model.addAttribute(
+            "averagePercentage",
+            resultService.getAveragePercentage()
+        );
+        
+        model.addAttribute(
+        	    "passingRatio",
+        	    resultService.getPassingRatio()
+        	);
+
+        model.addAttribute(
+        	    "highestScore",
+        	    resultService.getHighestScore()
+        	);
+        
+        model.addAttribute(
+        	    "examNames",
+        	    resultService.getAllExamNames()
+        	);
+        
         return "admin/manage-results";
     }
-}
+
+
+ }

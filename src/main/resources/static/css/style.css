@@ -564,3 +564,33 @@ h1, h2, h3, h4, h5, h6 {
 .sidebar-overlay.show {
     display: block;
 }
+
+.question-nav-btn.marked-review {
+    background-color: #ffb703 !important;
+    color: #000 !important;
+    border-color: #ffb703 !important;
+}
+
+.question-nav-btn.current {
+    background-color: #0d6efd !important;
+    color: white !important;
+    border-color: #0d6efd !important;
+}
+
+.question-nav-btn.answered {
+    background-color: #198754 !important;
+    color: white !important;
+    border-color: #198754 !important;
+}
+
+.question-nav-btn.marked-review {
+    background-color: #ffc107 !important;
+    color: #000 !important;
+    border-color: #ffc107 !important;
+}
+
+.question-nav-btn.unvisited {
+    background-color: white !important;
+    color: #212529 !important;
+    border-color: #dee2e6 !important;
+}

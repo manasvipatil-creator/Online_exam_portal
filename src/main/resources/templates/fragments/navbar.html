@@ -4,7 +4,79 @@
 -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head></head>
+<head>
+<style>
+
+.global-search-wrapper {
+    position: relative;
+    width: 360px;
+}
+
+.global-search-results {
+    position: absolute;
+    top: 48px;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    border: 1px solid #eeeeee;
+    z-index: 9999;
+    display: none;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.global-search-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: #212529;
+    border-bottom: 1px solid #f1f1f1;
+    transition: 0.2s;
+}
+
+.global-search-item:hover {
+    background: #f7f8ff;
+}
+
+.global-search-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eef4ff;
+    color: #4361ee;
+}
+
+.global-search-title {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.global-search-subtitle {
+    font-size: 12px;
+    color: #777;
+}
+
+.global-search-type {
+    margin-left: auto;
+    font-size: 11px;
+    color: #777;
+}
+
+.global-search-empty {
+    padding: 20px;
+    text-align: center;
+    color: #777;
+    font-size: 14px;
+}
+
+</style></head>
 <body>
 
     <!-- 1. PUBLIC TOP NAVIGATION BAR (Home, Login, Register Pages) -->
@@ -208,6 +280,97 @@
 
     <!-- 4. DASHBOARD TOP NAVIGATION PANEL (With Search, Notification & Avatar) -->
     <header th:fragment="dashboard-header(title)" class="dashboard-navbar">
+    
+    <style>
+
+.global-search-wrapper {
+    position: relative;
+    width: 360px;
+}
+
+.global-search-results {
+    position: absolute;
+    top: 48px;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e8e8e8;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    z-index: 99999;
+    display: none;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.global-search-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    text-decoration: none !important;
+    color: #212529 !important;
+    border-bottom: 1px solid #f1f1f1;
+    transition: all 0.2s ease;
+}
+
+.global-search-item:last-child {
+    border-bottom: none;
+}
+
+.global-search-item:hover {
+    background: #f7f8ff;
+    color: #212529 !important;
+}
+
+.global-search-icon {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    border-radius: 9px;
+    background: #eef4ff;
+    color: #4361ee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.global-search-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.global-search-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 2px;
+}
+
+.global-search-subtitle {
+    font-size: 12px;
+    color: #777;
+}
+
+.global-search-type {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6c757d;
+    background: #f1f3f5;
+    padding: 4px 8px;
+    border-radius: 20px;
+}
+
+.global-search-empty {
+    padding: 20px;
+    text-align: center;
+    color: #777;
+    font-size: 14px;
+}
+
+</style>
+    
+    
         <div class="d-flex align-items-center gap-3">
             <button class="sidebar-toggle btn p-0 text-dark">
                 <i class="fas fa-bars"></i>
@@ -217,18 +380,105 @@
         
         <div class="d-flex align-items-center gap-3">
             <!-- Search Widget -->
-         <form th:action="@{/admin/manage-exams}" method="get" class="search-box" id="examSearchForm">
+            
+            <style>
+.global-search-wrapper {
+    position: relative;
+    width: 360px;
+}
 
-    <i class="fas fa-search"></i>
+.global-search-results {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    width: 360px;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    z-index: 999999;
+    display: none;
+    max-height: 300px;
+    overflow-y: auto;
+}
 
-    <input type="text"
-           id="examSearch"
-           name="keyword"
-           placeholder="Search exams, users..."
-           th:value="${param.keyword}">
+.global-search-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    text-decoration: none !important;
+    color: #212529 !important;
+    background: white;
+    border-bottom: 1px solid #eeeeee;
+}
 
-</form>
-            <!-- Quick Notifications Icon -->
+.global-search-item:hover {
+    background: #f7f8ff;
+}
+
+.global-search-icon {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    border-radius: 9px;
+    background: #eef4ff;
+    color: #4361ee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.global-search-text {
+    flex: 1;
+}
+
+.global-search-title {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.global-search-subtitle {
+    font-size: 12px;
+    color: #777;
+}
+
+.global-search-type {
+    font-size: 11px;
+    color: #777;
+    background: #f1f3f5;
+    padding: 4px 8px;
+    border-radius: 20px;
+}
+
+.global-search-empty {
+    padding: 18px;
+    text-align: center;
+    color: #777;
+}
+</style>
+            
+            
+<div class="global-search-wrapper">
+
+    <div class="search-box">
+
+        <i class="fas fa-search"></i>
+
+        <input type="text"
+               id="globalSearchInput"
+               placeholder="Search exams, users..."
+               autocomplete="off">
+
+    </div>
+
+    <div id="globalSearchResults"
+         class="global-search-results">
+    </div>
+
+</div>
+
+    <!-- Quick Notifications Icon -->
             <div class="dropdown">
     <button class="btn btn-light rounded-circle p-2 position-relative"
             type="button"
@@ -307,11 +557,285 @@
       th:text="${session.admin.email}">
 </span>
         </div>
+        
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchInput =
+        document.getElementById("globalSearchInput");
+
+    const searchResults =
+        document.getElementById("globalSearchResults");
+
+    if (!searchInput || !searchResults) {
+        return;
+    }
+
+    let searchTimer;
+
+
+    // =====================================
+    // CURRENT PAGE DETECT
+    // =====================================
+
+    function getCurrentSearchType() {
+
+        const path = window.location.pathname;
+
+        if (path.includes("/admin/manage-exams")) {
+            return "Exam";
+        }
+
+        if (path.includes("/admin/manage-questions")) {
+            return "Question";
+        }
+
+        if (path.includes("/admin/manage-students")) {
+            return "Student";
+        }
+
+        if (path.includes("/admin/manage-results")) {
+            return "Result";
+        }
+
+        return "All";
+    }
+
+
+    // =====================================
+    // SEARCH
+    // =====================================
+
+    searchInput.addEventListener("input", function () {
+
+        const keyword = this.value.trim();
+
+        clearTimeout(searchTimer);
+
+
+        // Empty search
+        if (keyword.length === 0) {
+
+            searchResults.innerHTML = "";
+
+            searchResults.style.display = "none";
+
+            return;
+        }
+
+
+        searchTimer = setTimeout(function () {
+
+            fetch(
+                "/admin/global-search?keyword="
+                + encodeURIComponent(keyword)
+            )
+
+            .then(function (response) {
+
+                if (!response.ok) {
+                    throw new Error("Search request failed");
+                }
+
+                return response.json();
+
+            })
+
+            .then(function (data) {
+
+                const currentType =
+                    getCurrentSearchType();
+
+
+                // =====================================
+                // ONLY CURRENT PAGE RESULTS
+                // =====================================
+
+                let filteredResults =
+                    data.results;
+
+
+                if (currentType !== "All") {
+
+                    filteredResults =
+                        data.results.filter(function (item) {
+
+                            return item.type === currentType;
+
+                        });
+
+                }
+
+
+                displayGlobalSearchResults(
+                    filteredResults
+                );
+
+            })
+
+            .catch(function (error) {
+
+                console.error(
+                    "Global Search Error:",
+                    error
+                );
+
+                searchResults.innerHTML = `
+                    <div class="global-search-empty">
+                        Unable to search right now.
+                    </div>
+                `;
+
+                searchResults.style.display =
+                    "block";
+
+            });
+
+        }, 250);
+
+    });
+
+
+    // =====================================
+    // DISPLAY RESULTS
+    // =====================================
+
+    function displayGlobalSearchResults(results) {
+
+        searchResults.innerHTML = "";
+
+
+        // No result
+        if (!results || results.length === 0) {
+
+            searchResults.innerHTML = `
+                <div class="global-search-empty">
+                    <i class="fas fa-search"></i>
+                    <br>
+                    No results found
+                </div>
+            `;
+
+            searchResults.style.display =
+                "block";
+
+            return;
+        }
+
+
+        results.forEach(function (item) {
+
+            let icon = "fa-search";
+
+
+            if (item.type === "Exam") {
+                icon = "fa-book";
+            }
+
+            else if (item.type === "Student") {
+                icon = "fa-user";
+            }
+
+            else if (item.type === "Question") {
+                icon = "fa-question-circle";
+            }
+
+            else if (item.type === "Result") {
+                icon = "fa-chart-bar";
+            }
+
+
+            const resultItem =
+                document.createElement("a");
+
+
+            resultItem.href = item.url;
+
+            resultItem.className =
+                "global-search-item";
+
+
+            resultItem.innerHTML = `
+
+                <div class="global-search-icon">
+
+                    <i class="fas ${icon}"></i>
+
+                </div>
+
+                <div class="global-search-text">
+
+                    <div class="global-search-title">
+
+                        ${item.title}
+
+                    </div>
+
+                    <div class="global-search-subtitle">
+
+                        ${item.subtitle || ""}
+
+                    </div>
+
+                </div>
+
+                <div class="global-search-type">
+
+                    ${item.type}
+
+                </div>
+
+            `;
+
+
+            searchResults.appendChild(
+                resultItem
+            );
+
+        });
+
+
+        searchResults.style.display =
+            "block";
+    }
+
+
+    // =====================================
+    // CLOSE WHEN CLICK OUTSIDE
+    // =====================================
+
+    document.addEventListener(
+        "click",
+        function (event) {
+
+            const wrapper =
+                document.querySelector(
+                    ".global-search-wrapper"
+                );
+
+
+            if (
+                wrapper &&
+                !wrapper.contains(event.target)
+            ) {
+
+                searchResults.style.display =
+                    "none";
+
+            }
+
+        }
+    );
+
+});
+
+</script>
     </header>
     
     
     
-    
+   
  
 
 </body>

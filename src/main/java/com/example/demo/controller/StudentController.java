@@ -1,5 +1,7 @@
 package com.example.demo.controller;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -174,11 +176,15 @@ public class StudentController {
 	    // Get current question
 	    Question currentQuestion = questions.get(index);
 
+	    
+	    Exam exam = examService.getExamById(id);
+	    
 	    // Get previously selected answer
 	    StudentAnswer savedAnswer =
 	            studentAnswerService.getAnswer(
 	                student.getId(),
-	                currentQuestion.getId()
+	                currentQuestion.getId(),
+	                id
 	            );
 
 	    String selectedAnswer = "";
@@ -189,10 +195,45 @@ public class StudentController {
 
 	    // Send data to HTML
 	    model.addAttribute("examId", id);
+	    model.addAttribute("examDurationMinutes", exam.getDuration());
 	    model.addAttribute("questionList", questions);
 	    model.addAttribute("currentQuestion", currentQuestion);
 	    model.addAttribute("currentIndex", index);
 	    model.addAttribute("selectedAnswer", selectedAnswer);
+	    
+	    int progressPercent =
+	            ((index + 1) * 100) / questions.size();
+
+	    model.addAttribute("progressPercent", progressPercent);
+	    
+	    Set<Integer> reviewedQuestions = new HashSet<>();
+	    Set<Integer> answeredQuestions = new HashSet<>();
+
+	    for (Question q : questions) {
+
+	        StudentAnswer answer =
+	                studentAnswerService.getAnswer(
+	                        student.getId(),
+	                        q.getId(),
+	                        id);
+
+	        if (answer != null) {
+
+	            // Marked for Review
+	            if (answer.isMarkedForReview()) {
+	                reviewedQuestions.add(q.getId());
+	            }
+
+	            // Answered
+	            if (answer.getSelectedAnswer() != null
+	                    && !answer.getSelectedAnswer().isBlank()) {
+	                answeredQuestions.add(q.getId());
+	            }
+	        }
+	    }
+
+	    model.addAttribute("reviewedQuestions", reviewedQuestions);
+	    model.addAttribute("answeredQuestions", answeredQuestions);
 
 	    return "student/start-exam";
 	}
@@ -418,6 +459,60 @@ public class StudentController {
 	            + examId + "/" + nextIndex;
 	}
 	
+	
+	@PostMapping("/student/exam/mark-review")
+	public String markForReview(
+	        @RequestParam int examId,
+	        @RequestParam int questionId,
+	        @RequestParam int currentIndex,
+	        @RequestParam(required = false) String selectedAnswer,
+	        HttpSession session) {
+
+	    Student student = (Student) session.getAttribute("student");
+
+	    if (student == null) {
+	        return "redirect:/student/login";
+	    }
+
+	    // First save selected answer
+	    if (selectedAnswer != null && !selectedAnswer.isBlank()) {
+
+	        StudentAnswer answer = new StudentAnswer();
+
+	        answer.setStudentId(student.getId());
+	        answer.setQuestionId(questionId);
+	        answer.setExamId(examId);
+	        answer.setSelectedAnswer(selectedAnswer);
+
+	        studentAnswerService.saveAnswer(answer);
+	    }
+
+	    // Check current review status
+	    StudentAnswer existingAnswer =
+	            studentAnswerService.getAnswer(
+	                    student.getId(),
+	                    questionId,
+	                    examId
+	            );
+
+	    boolean currentlyMarked = false;
+
+	    if (existingAnswer != null) {
+	        currentlyMarked = existingAnswer.isMarkedForReview();
+	    }
+
+	    // Toggle: true -> false, false -> true
+	    studentAnswerService.markForReview(
+	            student.getId(),
+	            questionId,
+	            examId,
+	            !currentlyMarked
+	    );
+
+	    return "redirect:/student/exam/start/"
+	            + examId + "/"
+	            + currentIndex;
+	}
 	
 	@PostMapping("/student/exam/previous")
 	public String previousQuestion(

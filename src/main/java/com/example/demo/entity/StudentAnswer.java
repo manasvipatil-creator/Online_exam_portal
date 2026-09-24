@@ -15,6 +15,18 @@ public class StudentAnswer {
 
     private String selectedAnswer;
     
+	private boolean markedForReview;
+    
+    public boolean isMarkedForReview() {
+		return markedForReview;
+	}
+
+	public void setMarkedForReview(boolean markedForReview) {
+		this.markedForReview = markedForReview;
+	}
+
+
+    
     
     @Column(name = "exam_id")
     private Integer examId;

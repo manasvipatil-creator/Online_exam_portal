@@ -17,11 +17,12 @@ public class StudentAnswerService {
     public void saveAnswer(StudentAnswer answer) {
 
         StudentAnswer existing =
-                repository.findByStudentIdAndQuestionId(
+                repository.findByStudentIdAndQuestionIdAndExamId(
                         answer.getStudentId(),
-                        answer.getQuestionId());
+                        answer.getQuestionId(),
+                        answer.getExamId());
 
-        if(existing != null) {
+        if (existing != null) {
 
             existing.setSelectedAnswer(
                     answer.getSelectedAnswer());
@@ -33,18 +34,52 @@ public class StudentAnswerService {
             repository.save(answer);
         }
     }
-
     public List<StudentAnswer> getAnswers(
             int studentId){
 
         return repository.findByStudentId(studentId);
     }
     
-    public StudentAnswer getAnswer(int studentId, int questionId){
+    public void markForReview(
+            int studentId,
+            int questionId,
+            int examId,
+            boolean marked) {
 
-        return repository.findByStudentIdAndQuestionId(
+        StudentAnswer answer =
+                repository.findByStudentIdAndQuestionIdAndExamId(
+                        studentId,
+                        questionId,
+                        examId);
+
+        if (answer != null) {
+
+            answer.setMarkedForReview(marked);
+
+            repository.save(answer);
+
+        } else {
+
+            StudentAnswer newAnswer = new StudentAnswer();
+
+            newAnswer.setStudentId(studentId);
+            newAnswer.setQuestionId(questionId);
+            newAnswer.setExamId(examId);
+            newAnswer.setMarkedForReview(marked);
+
+            repository.save(newAnswer);
+        }
+    }
+    
+    public StudentAnswer getAnswer(
+            int studentId,
+            int questionId,
+            int examId) {
+
+        return repository.findByStudentIdAndQuestionIdAndExamId(
                 studentId,
-                questionId);
+                questionId,
+                examId);
     }
     
     public long getAttemptedExamCount(int studentId) {

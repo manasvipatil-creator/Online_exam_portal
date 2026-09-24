@@ -57,6 +57,10 @@ public class ExamService {
 
         return examRepository.findByexamNameContainingIgnoreCase(keyword);
     }
+    
+    public Exam saveExam(Exam exam) {
+        return examRepository.save(exam);
+    }
 
 	
     

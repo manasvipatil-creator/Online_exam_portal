@@ -1,131 +1,312 @@
-
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Student Details</title>
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Details - Admin Panel</title>
+
+    <!-- Existing Admin Styles -->
+    <th:block th:replace="~{fragments/footer :: styles}"></th:block>
 
     <style>
-        body{
-            background:#f4f7fc;
+
+        /* ================================
+           STUDENT DETAILS PAGE
+        ================================= */
+
+        .student-details-wrapper {
+            max-width: 850px;
+            margin: 0 auto;
         }
 
-        .profile-card{
-            max-width:700px;
-            margin:50px auto;
-            border:none;
-            border-radius:20px;
-            overflow:hidden;
-            box-shadow:0 10px 30px rgba(0,0,0,0.1);
+        .profile-card {
+            border: none;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
         }
 
-        .profile-header{
-            background:linear-gradient(135deg,#4f46e5,#6366f1);
-            color:white;
-            padding:40px;
-            text-align:center;
+        .profile-header {
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            color: white;
+            padding: 45px 30px;
+            text-align: center;
         }
 
-        .avatar{
-            width:90px;
-            height:90px;
-            border-radius:50%;
-            background:white;
-            color:#4f46e5;
-            font-size:32px;
-            font-weight:bold;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            margin:auto;
-            margin-bottom:15px;
+        .avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: white;
+            color: #4f46e5;
+
+            font-size: 32px;
+            font-weight: 700;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            margin: 0 auto 15px;
         }
 
-        .detail-row{
-            padding:15px 25px;
-            border-bottom:1px solid #eee;
+        .profile-header h3 {
+            font-weight: 700;
+            margin-bottom: 5px;
         }
 
-        .detail-label{
-            font-weight:600;
-            color:#6b7280;
+        .profile-header p {
+            opacity: 0.9;
         }
 
-        .detail-value{
-            font-weight:500;
-            color:#111827;
+        .detail-row {
+            padding: 18px 25px;
+            border-bottom: 1px solid #eeeeee;
         }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #6b7280;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .student-status-active {
+            background: #198754;
+            color: white;
+            border-radius: 6px;
+            padding: 5px 10px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .student-status-suspended {
+            background: #dc3545;
+            color: white;
+            border-radius: 6px;
+            padding: 5px 10px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .back-btn {
+            min-width: 180px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
     </style>
+
 </head>
+
+
 <body>
 
-<div class="container">
+    <div class="dashboard-wrapper">
 
-    <div class="card profile-card">
+        <!-- ================================
+             ADMIN SIDEBAR
+        ================================= -->
 
-        <div class="profile-header">
+        <div th:replace="~{fragments/navbar :: admin-sidebar('students')}"></div>
 
-            <div class="avatar"
-                 th:text="${#strings.substring(student.fullName,0,1)}">
-                M
+
+        <!-- ================================
+             MAIN CONTENT
+        ================================= -->
+
+        <div class="main-content">
+
+            <!-- Header -->
+
+            <header th:replace="~{fragments/navbar :: dashboard-header('Student Details')}"></header>
+
+
+            <!-- Page Content -->
+
+            <div class="content-body">
+
+                <div class="student-details-wrapper">
+
+                    <div class="card profile-card bg-white">
+
+                        <!-- ================================
+                             PROFILE HEADER
+                        ================================= -->
+
+                        <div class="profile-header">
+
+                            <div class="avatar"
+                                 th:text="${#strings.substring(student.fullName,0,1).toUpperCase()}">
+                                M
+                            </div>
+
+                            <h3 th:text="${student.fullName}">
+                                Student Name
+                            </h3>
+
+                            <p class="mb-0">
+                                Student Profile
+                            </p>
+
+                        </div>
+
+
+                        <!-- ================================
+                             STUDENT DETAILS
+                        ================================= -->
+
+                        <div class="card-body p-0">
+
+                            <!-- Student ID -->
+
+                            <div class="detail-row d-flex justify-content-between align-items-center">
+
+                                <span class="detail-label">
+                                    Student ID
+                                </span>
+
+                                <span class="detail-value"
+                                      th:text="${student.id}">
+                                    3
+                                </span>
+
+                            </div>
+
+
+                            <!-- Full Name -->
+
+                            <div class="detail-row d-flex justify-content-between align-items-center">
+
+                                <span class="detail-label">
+                                    Full Name
+                                </span>
+
+                                <span class="detail-value"
+                                      th:text="${student.fullName}">
+                                    Student Name
+                                </span>
+
+                            </div>
+
+
+                            <!-- Email -->
+
+                            <div class="detail-row d-flex justify-content-between align-items-center">
+
+                                <span class="detail-label">
+                                    Email Address
+                                </span>
+
+                                <span class="detail-value"
+                                      th:text="${student.email}">
+                                    student@gmail.com
+                                </span>
+
+                            </div>
+
+
+                            <!-- Mobile -->
+
+                            <div class="detail-row d-flex justify-content-between align-items-center">
+
+                                <span class="detail-label">
+                                    Mobile Number
+                                </span>
+
+                                <span class="detail-value"
+                                      th:text="${student.mobileNumber}">
+                                    9876543210
+                                </span>
+
+                            </div>
+
+
+                            <!-- Registered Date -->
+
+                            <div class="detail-row d-flex justify-content-between align-items-center">
+
+                                <span class="detail-label">
+                                    Registered Date
+                                </span>
+
+                                <span class="detail-value"
+                                      th:text="${student.registeredDate}">
+                                    2026-09-08
+                                </span>
+
+                            </div>
+
+
+                            <!-- Status -->
+
+                            <div class="detail-row d-flex justify-content-between align-items-center">
+
+                                <span class="detail-label">
+                                    Account Status
+                                </span>
+
+                                <span>
+
+                                    <span th:if="${student.status == 'ACTIVE'}"
+                                          class="student-status-active">
+                                        Active
+                                    </span>
+
+                                    <span th:if="${student.status == 'SUSPENDED'}"
+                                          class="student-status-suspended">
+                                        Suspended
+                                    </span>
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ================================
+                             FOOTER
+                        ================================= -->
+
+                        <div class="card-footer bg-white text-center border-0 p-4">
+
+                            <a th:href="@{/admin/manage-students}"
+                               class="btn btn-primary px-4 py-2 back-btn">
+
+                                <i class="fas fa-arrow-left me-2"></i>
+                                Back to Students
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
-
-            <h3 th:text="${student.fullName}">
-                Student Name
-            </h3>
-
-            <p class="mb-0">Student Profile</p>
-
-        </div>
-
-        <div class="card-body p-0">
-
-            <div class="detail-row d-flex justify-content-between">
-                <span class="detail-label">Student ID</span>
-                <span class="detail-value"
-                      th:text="${student.id}">
-                </span>
-            </div>
-
-            <div class="detail-row d-flex justify-content-between">
-                <span class="detail-label">Full Name</span>
-                <span class="detail-value"
-                      th:text="${student.fullName}">
-                </span>
-            </div>
-
-            <div class="detail-row d-flex justify-content-between">
-                <span class="detail-label">Email Address</span>
-                <span class="detail-value"
-                      th:text="${student.email}">
-                </span>
-            </div>
-
-            <div class="detail-row d-flex justify-content-between">
-                <span class="detail-label">Mobile Number</span>
-                <span class="detail-value"
-                      th:text="${student.mobileNumber}">
-                </span>
-            </div>
-
-        </div>
-
-        <div class="card-footer bg-white text-center border-0 p-4">
-
-            <a th:href="@{/admin/manage-students}"
-               class="btn btn-primary px-4">
-                ← Back to Students
-            </a>
 
         </div>
 
     </div>
 
-</div>
+
+    <!-- Existing Admin Scripts -->
+
+    <th:block th:replace="~{fragments/footer :: scripts}"></th:block>
 
 </body>
+
 </html>
-```

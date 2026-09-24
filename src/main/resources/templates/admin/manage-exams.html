@@ -34,10 +34,11 @@
                             <span th:text="${exam.id == 0 ? 'Create New Exam' : 'Edit Exam'}"> Create New Exam</span>
                             </h5>
                             
-                            <form th:action="${exam.id == 0} ? @{/admin/add-exam} : @{/admin/exams/update}"
-						      th:object="${exam}"
-						      method="post">
-                                <!-- Exam Title -->
+<form th:action="${exam.id == 0} ? '/admin/add-exam' : '/admin/exams/update'"
+      th:object="${exam}"
+      method="post">
+
+    <input type="hidden" th:field="*{id}">                                <!-- Exam Title -->
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold text-dark">Exam Title</label>
                                     <input type="text" class="form-control rounded-3" th:field="*{examName}" placeholder="e.g. Core Java Basics" required>
