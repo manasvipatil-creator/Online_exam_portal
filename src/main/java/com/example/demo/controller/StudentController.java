@@ -179,6 +179,36 @@ public class StudentController {
 	    
 	    Exam exam = examService.getExamById(id);
 	    
+	    System.out.println("================================");
+	    System.out.println("EXAM ID = " + id);
+	    System.out.println("EXAM NAME = " + exam.getExamName());
+	    System.out.println("EXAM DURATION = " + exam.getDuration());
+	    System.out.println("================================");
+	    
+	    Long examEndTime =
+	            (Long) session.getAttribute("examEndTime_" + id);
+
+	    if (examEndTime == null) {
+
+	        examEndTime =
+	                System.currentTimeMillis()
+	                + (exam.getDuration() * 60L * 1000L);
+
+	        session.setAttribute(
+	                "examEndTime_" + id,
+	                examEndTime);
+	    }
+
+	    long remainingSeconds =
+	            Math.max(
+	                    0,
+	                    (examEndTime - System.currentTimeMillis()) / 1000
+	            );
+
+	    model.addAttribute(
+	            "remainingSeconds",
+	            remainingSeconds);
+	    
 	    // Get previously selected answer
 	    StudentAnswer savedAnswer =
 	            studentAnswerService.getAnswer(
@@ -278,8 +308,10 @@ public class StudentController {
 
 
 	    List<StudentAnswer> answers =
-	            studentAnswerService.getAnswers(student.getId());
-
+	            studentAnswerService.getAnswersByStudentAndExam(
+	                    student.getId(),
+	                    examId);
+	    
 	    List<Question> allQuestions =
 	            questionService.getQuestionsByExamId(examId);
 
@@ -407,24 +439,38 @@ public class StudentController {
 	}
 	
 	@GetMapping("/student/exam/begin/{id}")
-	public String beginExam(@PathVariable int id,
-	                        HttpSession session) {
+	public String beginExam(
+	        @PathVariable int id,
+	        HttpSession session) {
 
 	    Student student =
-	        (Student) session.getAttribute("student");
+	            (Student) session.getAttribute("student");
 
-	    if(student == null){
+	    if(student == null) {
 	        return "redirect:/student/login";
 	    }
 
-	    // जुने answers delete कर
+	    // Clear previous answers
 	    studentAnswerService.clearExamAnswers(
 	            student.getId(), id);
 
-	    // First question open
-	    return "redirect:/student/exam/start/" + id + "/0";
+	    // Get latest exam from database
+	    Exam exam =
+	            examService.getExamById(id);
+
+	    // Start NEW timer
+	    long endTime =
+	            System.currentTimeMillis()
+	            + (exam.getDuration() * 60L * 1000L);
+
+	    // Save timer end time in session
+	    session.setAttribute(
+	            "examEndTime_" + id,
+	            endTime);
+
+	    return "redirect:/student/exam/start/"
+	            + id + "/0";
 	}
-	
 	
 	@PostMapping("/student/exam/save")
 	public String saveAnswer(

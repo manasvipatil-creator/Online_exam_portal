@@ -40,6 +40,15 @@ public class StudentAnswerService {
         return repository.findByStudentId(studentId);
     }
     
+    public List<StudentAnswer> getAnswersByStudentAndExam(
+            int studentId,
+            int examId) {
+
+        return repository.findByStudentIdAndExamId(
+                studentId,
+                examId);
+    }
+    
     public void markForReview(
             int studentId,
             int questionId,

@@ -55,76 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }, false);
     }
 
-    // 3. EXAM QUIZ ENGINE (START EXAM PAGE SPECIFIC)
-    const timerDisplay = document.getElementById('exam-timer');
-    if (timerDisplay) {
-        let durationMinutes = parseInt(timerDisplay.getAttribute('data-duration') || '60', 10);
-        let timeRemaining = durationMinutes * 60;
-        
-        const interval = setInterval(function () {
-            let minutes = Math.floor(timeRemaining / 60);
-            let seconds = timeRemaining % 60;
-            
-            // Format padding
-            minutes = minutes < 10 ? '0' + minutes : minutes;
-            seconds = seconds < 10 ? '0' + seconds : seconds;
-            
-            timerDisplay.textContent = minutes + ':' + seconds;
-            
-            // Progress Bar update
-            const totalDuration = durationMinutes * 60;
-            const progressPercent = ((totalDuration - timeRemaining) / totalDuration) * 100;
-            const timerProgressBar = document.getElementById('timer-progress-bar');
-            if (timerProgressBar) {
-                timerProgressBar.style.width = progressPercent + '%';
-                if (progressPercent > 80) {
-                    timerProgressBar.className = 'progress-bar bg-danger';
-                } else if (progressPercent > 50) {
-                    timerProgressBar.className = 'progress-bar bg-warning';
-                }
-            }
-            
-            if (timeRemaining <= 0) {
-                clearInterval(interval);
-                alert("Time is up! Your exam will be submitted automatically.");
-                const examForm = document.getElementById('examForm');
-                if (examForm) examForm.submit();
-            }
-            
-            timeRemaining--;
-        }, 1000);
-    }
-
-    // Interactive MCQ selection handler
-    const mcqOptions = document.querySelectorAll('.mcq-option');
-    mcqOptions.forEach(function (option) {
-        option.addEventListener('click', function () {
-            // Find parent questions block
-            const radio = this.querySelector('input[type="radio"]');
-            if (radio) {
-                radio.checked = true;
-                
-                // Remove selected class from all siblings
-                const siblings = this.parentElement.querySelectorAll('.mcq-option');
-                siblings.forEach(s => s.classList.remove('selected'));
-                
-                // Add selected class to active
-                this.classList.add('selected');
-                
-                // Update question navigator status (answered status)
-                updateQuestionStatus(radio.name);
-            }
-        });
-    });
-
-    function updateQuestionStatus(questionName) {
-        // e.g. questionName is "q1" -> update button 1
-        const questionIndex = questionName.replace(/^\D+/g, ''); // Extract number
-        const navBtn = document.getElementById('q-nav-' + questionIndex);
-        if (navBtn) {
-            navBtn.classList.add('answered');
-        }
-    }
+   
 
     // 4. ADMIN DASHBOARD CHARTS MOCK (Using beautiful custom SVG drawing)
     const adminChartCanvas = document.getElementById('adminStatsChart');

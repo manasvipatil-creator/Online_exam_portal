@@ -8,6 +8,12 @@ import com.example.demo.entity.StudentAnswer;
 
 public interface StudentAnswerRepository
         extends JpaRepository<StudentAnswer, Integer> {
+	
+	
+	List<StudentAnswer> findByStudentIdAndExamId(
+	        int studentId,
+	        int examId
+	);
 
     List<StudentAnswer> findByStudentId(int studentId);
 

@@ -32,18 +32,17 @@
     <!-- Main Exam Interface -->
     <div class="container-fluid px-md-5 py-4">
     
-        <form th:action="@{/student/exam/submit}" method="POST" id="examForm">
-            <!-- Hidden inputs to track exam details in Spring Boot -->
-          <!-- Current Question ID -->
+      <form th:action="@{/student/exam/submit}"
+      method="POST"
+      id="examForm">
+
     <input type="hidden"
            name="questionId"
            th:value="${currentQuestion.id}">
 
-    <!-- Exam ID -->
     <input type="hidden"
            name="examId"
            th:value="${examId}">
-         
        
            
             
@@ -250,11 +249,12 @@
                         <!-- The timer display will be populated and handled via static duration attr in app.js -->
                         <div class="timer-container mx-auto mb-3" style="width: max-content;">
                             <i class="far fa-clock"></i>
-                           <span id="exam-timer"
-								      th:data-duration="${examDurationMinutes}">
-								    00:00
-								</span>
-			                        </div>
+						                           <span id="exam-timer"
+						      th:data-remaining="${remainingSeconds}">
+						    00:00
+						</span>
+						
+									                        </div>
                         
                         <!-- Timer visual sub-progress bar -->
                         <div class="progress rounded-pill mb-2" style="height: 6px;">
@@ -342,9 +342,9 @@ document.querySelector("form[action*='mark-review']")
 <script>
     const timerElement = document.getElementById("exam-timer");
 
-    let durationMinutes = parseInt(timerElement.dataset.duration);
-    let totalSeconds = durationMinutes * 60;
-
+    let totalSeconds =
+        parseInt(timerElement.dataset.remaining);
+    
     function updateTimer() {
 
         let minutes = Math.floor(totalSeconds / 60);
