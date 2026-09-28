@@ -140,7 +140,15 @@ public class StudentController {
 	@GetMapping("/student/exams")
 	public String availableExams(Model model) {
 
-	    model.addAttribute("examList", examService.getAllExams());
+	    List<Exam> exams =
+	            examService.getAllExams();
+
+	    System.out.println(
+	            "TOTAL EXAMS = " + exams.size());
+
+	    model.addAttribute(
+	            "examList",
+	            exams);
 
 	    return "student/exam-list";
 	}
@@ -295,51 +303,59 @@ public class StudentController {
 	
 	@PostMapping("/student/exam/submit")
 	public String submitExamPost(
-			 @RequestParam int examId,
+
+	        @RequestParam int examId,
+
 	        HttpSession session,
+
 	        Model model) {
 
+	    // Get logged-in student
 	    Student student =
 	            (Student) session.getAttribute("student");
 
-	    if(student == null) {
+	    if (student == null) {
 	        return "redirect:/student/login";
 	    }
 
-
+	    // Get student's answers for this exam
 	    List<StudentAnswer> answers =
 	            studentAnswerService.getAnswersByStudentAndExam(
 	                    student.getId(),
 	                    examId);
-	    
+
+	    // Get all questions of this exam
 	    List<Question> allQuestions =
 	            questionService.getQuestionsByExamId(examId);
 
+	    // Get exam details
+	    Exam exam =
+	            examService.getExamById(examId);
 
+	    // Marks calculation
 	    int totalMarks = 0;
 	    int obtainedMarks = 0;
 	    int correctAnswers = 0;
 
-
-	    // Complete exam चे total marks
-	    for(Question question : allQuestions) {
+	    // Calculate total marks
+	    for (Question question : allQuestions) {
 
 	        totalMarks += question.getMarks();
 	    }
 
-
-	    // Student ने दिलेल्या answers check कर
-	    for(StudentAnswer answer : answers) {
+	    // Check student's answers
+	    for (StudentAnswer answer : answers) {
 
 	        Question question =
 	                questionService.getQuestionById(
 	                        answer.getQuestionId());
 
-	        if(question != null &&
-	           question.getCorrectAnswer() != null &&
-	           question.getCorrectAnswer()
-	                   .equalsIgnoreCase(
-	                           answer.getSelectedAnswer())) {
+	        if (question != null
+	                && question.getCorrectAnswer() != null
+	                && answer.getSelectedAnswer() != null
+	                && question.getCorrectAnswer()
+	                        .equalsIgnoreCase(
+	                                answer.getSelectedAnswer())) {
 
 	            obtainedMarks += question.getMarks();
 
@@ -347,22 +363,43 @@ public class StudentController {
 	        }
 	    }
 
+	    // Total questions
 	    int totalQuestions = allQuestions.size();
+
+	    int attemptedAnswers = answers.size();
+
 	    int wrongAnswers =
-	            totalQuestions - correctAnswers;
+	            attemptedAnswers - correctAnswers;
 
+	    int unansweredAnswers =
+	            totalQuestions - attemptedAnswers;
+	    
+	    // Percentage
+	    double percentage = 0;
 
-	    double percentage =
-	            ((double) obtainedMarks / totalMarks) * 100;
+	    if (totalMarks > 0) {
 
+	        percentage =
+	                ((double) obtainedMarks / totalMarks) * 100;
+	    }
 
+	    // Fixed passing criteria = 40%
+	    int passingMarks =
+	            (int) Math.ceil(totalMarks * 0.40);
+
+	    // Pass / Fail status
 	    String status =
-	            percentage >= 40 ? "PASSED" : "FAILED";
+	            obtainedMarks >= passingMarks
+	            ? "PASSED"
+	            : "FAILED";
 
 
+	    // ==============================
 	    // Save Result in Database
+	    // ==============================
 
-	    Result result = new Result();
+	    Result result =
+	            new Result();
 
 	    result.setStudentName(
 	            student.getFullName());
@@ -370,7 +407,8 @@ public class StudentController {
 	    result.setStudentEmail(
 	            student.getEmail());
 
-	    result.setExamName("Online Exam");
+	    result.setExamName(
+	            exam.getExamName());
 
 	    result.setDate(
 	            java.time.LocalDate.now().toString());
@@ -379,17 +417,19 @@ public class StudentController {
 	            obtainedMarks + " / " + totalMarks);
 
 	    result.setPercent(
-	            String.format("%.0f%%", percentage));
+	            String.format(
+	                    "%.0f%%",
+	                    percentage));
 
 	    result.setPassed(
-	            percentage >= 40);
-
+	            obtainedMarks >= passingMarks);
 
 	    resultService.saveResult(result);
 
 
-
+	    // ==============================
 	    // Send Data To Result Page
+	    // ==============================
 
 	    model.addAttribute(
 	            "percent",
@@ -399,13 +439,10 @@ public class StudentController {
 	            "status",
 	            status);
 
-	    Exam exam =
-	            examService.getExamById(examId);
-
 	    model.addAttribute(
 	            "examTitle",
 	            exam.getExamName());
-	    
+
 	    model.addAttribute(
 	            "date",
 	            java.time.LocalDate.now());
@@ -421,6 +458,14 @@ public class StudentController {
 	    model.addAttribute(
 	            "wrongAnswers",
 	            wrongAnswers);
+	    
+	    model.addAttribute(
+	            "attemptedAnswers",
+	            attemptedAnswers);
+
+	    model.addAttribute(
+	            "unansweredAnswers",
+	            unansweredAnswers);
 
 	    model.addAttribute(
 	            "score",
@@ -428,11 +473,11 @@ public class StudentController {
 
 	    model.addAttribute(
 	            "remarks",
-	            percentage >= 80 ?
-	            "Excellent Performance!" :
-	            percentage >= 40 ?
-	            "Good Job!" :
-	            "Need More Practice");
+	            percentage >= 80
+	            ? "Excellent Performance!"
+	            : percentage >= 40
+	            ? "Good Job!"
+	            : "Need More Practice");
 
 
 	    return "student/result";
@@ -589,6 +634,28 @@ public class StudentController {
 	
 	
 	
+	
+	// RESULT HISTORY
+	@GetMapping("/student/results")
+	public String resultHistory(
+	        HttpSession session,
+	        Model model) {
+
+	    Student student =
+	            (Student) session.getAttribute("student");
+
+	    if(student == null) {
+	        return "redirect:/student/login";
+	    }
+
+	    List<Result> results =
+	            resultService.getStudentResults(
+	                    student.getEmail());
+
+	    model.addAttribute("results", results);
+
+	    return "student/result-history";
+	}
 	
 	
 	

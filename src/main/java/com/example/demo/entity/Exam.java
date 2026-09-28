@@ -16,7 +16,7 @@ public class Exam {
 	private String subject;
 	private int duration;
 	private int totalMarks;
-	private int passingScore;
+	
 	private String description;
 
 	
@@ -52,13 +52,7 @@ public class Exam {
 		this.totalMarks = totalMarks;
 	}
 	
-	public int getPassingScore() {
-	    return passingScore;
-	}
-
-	public void setPassingScore(int passingScore) {
-	    this.passingScore = passingScore;
-	}
+	
 
 	public String getDescription() {
 	    return description;

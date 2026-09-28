@@ -29,6 +29,8 @@ public interface StudentAnswerRepository
     );
 
     long countByStudentId(int studentId);
+    
+    long countDistinctExamIdByStudentId(int studentId);
 
     void deleteByStudentIdAndExamId(int studentId, int examId);
     

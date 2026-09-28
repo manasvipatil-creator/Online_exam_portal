@@ -95,10 +95,12 @@
                                         <span class="text-gray-500 d-block">Total Questions</span>
                                         <span class="fw-bold text-dark" th:text="${exam.totalMarks}">30 Qs</span>
                                     </div>
-                                    <div class="col-6">
-                                        <span class="text-gray-500 d-block">Passing Score</span>
-                                        <span class="fw-bold text-dark" th:text="${exam.passingScore}">150 Marks</span>
-                                    </div>
+                                   <div class="col-6">
+    <span class="text-gray-500 d-block">Passing Score</span>
+    <span class="fw-bold text-dark">
+        40%
+    </span>
+</div>
                                 </div>
                                 
 										<a th:href="@{/student/exam/begin/{id}(id=${exam.id})}"
