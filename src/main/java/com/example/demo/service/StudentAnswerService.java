@@ -92,10 +92,8 @@ public class StudentAnswerService {
     }
     
     public long getAttemptedExamCount(int studentId) {
-
-        return repository.countByStudentId(studentId);
-    }
-    
+        return repository.countDistinctExamIdByStudentId(studentId);
+    }    
     
     @Transactional
     public void clearExamAnswers(int studentId, int examId) {

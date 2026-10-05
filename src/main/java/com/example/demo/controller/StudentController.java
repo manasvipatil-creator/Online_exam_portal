@@ -21,6 +21,7 @@ import com.example.demo.service.QuestionService;
 import com.example.demo.service.ResultService;
 import com.example.demo.service.StudentAnswerService;
 import com.example.demo.service.StudentService;
+import com.example.demo.entity.Result;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -105,9 +106,12 @@ public class StudentController {
 	    model.addAttribute("totalExamsCount", totalExams);
 
 	    long attemptedExams =
-	            studentAnswerService.getAttemptedExamCount(student.getId());
+	            resultService.getAttemptedExamCount(
+	                    student.getEmail());
 
-	    model.addAttribute("attemptedExamsCount", attemptedExams);
+	    model.addAttribute(
+	            "attemptedExamsCount",
+	            attemptedExams);
 
 	    model.addAttribute("pendingExamsCount",
 	            totalExams - attemptedExams);
@@ -292,6 +296,31 @@ public class StudentController {
 	            "Excellent Performance! Keep it up.");
 
 	    return "student/result";
+	}
+	
+	@GetMapping("/student/result/{id}")
+	public String resultDetails(
+	        @PathVariable int id,
+	        HttpSession session,
+	        Model model) {
+
+	    Student student =
+	            (Student) session.getAttribute("student");
+
+	    if (student == null) {
+	        return "redirect:/student/login";
+	    }
+
+	    Result result =
+	            resultService.getResultById(id);
+
+	    if (result == null) {
+	        return "redirect:/student/results";
+	    }
+
+	    model.addAttribute("result", result);
+
+	    return "student/result-details";
 	}
 	
 	
@@ -657,20 +686,102 @@ public class StudentController {
 	    return "student/result-history";
 	}
 	
-	
-	
-	@GetMapping("/student/profile")
-	public String profile(HttpSession session,
-	                      Model model) {
+	@PostMapping("/student/profile/update")
+	public String updateProfile(
+	        @RequestParam String fullName,
+	        @RequestParam String mobileNumber,
+	        @RequestParam String department,
+	        HttpSession session,
+	        Model model) {
 
 	    Student student =
 	            (Student) session.getAttribute("student");
+
+	    if (student == null) {
+	        return "redirect:/student/login";
+	    }
+
+	    boolean updated =
+	            studentService.updateStudentProfile(
+	                    student.getId(),
+	                    fullName,
+	                    mobileNumber,
+	                    department);
+
+	    if (updated) {
+
+	        student.setFullName(fullName);
+	        student.setMobileNumber(mobileNumber);
+	        student.setDepartment(department);
+
+	        session.setAttribute("student", student);
+
+	        model.addAttribute(
+	                "infoSuccess",
+	                true);
+	    }
+
+	    model.addAttribute("student", student);
+
+	    return "student/student-profile";
+	}
+	
+	@GetMapping("/student/profile")
+	public String profile(HttpSession session, Model model) {
+
+	    Student student = (Student) session.getAttribute("student");
 
 	    if(student == null) {
 	        return "redirect:/student/login";
 	    }
 
+	    // Student information
 	    model.addAttribute("student", student);
+
+	    // Student exam history
+	    List<Result> results =
+	            resultService.getStudentResults(student.getEmail());
+
+	    model.addAttribute("results", results);
+
+	    return "student/student-profile";
+	}
+	
+	@PostMapping("/student/profile/password")
+	public String changePassword(
+	        @RequestParam String currentPassword,
+	        @RequestParam String newPassword,
+	        @RequestParam String confirmNewPassword,
+	        HttpSession session,
+	        Model model) {
+
+	    Student student =
+	            (Student) session.getAttribute("student");
+
+	    if (student == null) {
+	        return "redirect:/student/login";
+	    }
+
+	    String result = studentService.changeStudentPassword(
+	            student.getId(),
+	            currentPassword,
+	            newPassword,
+	            confirmNewPassword
+	    );
+
+	    if ("SUCCESS".equals(result)) {
+	        model.addAttribute("pwdSuccess",
+	                "Password changed successfully!");
+	    } else {
+	        model.addAttribute("pwdError", result);
+	    }
+
+	    model.addAttribute("student", student);
+	    
+	    List<Result> results =
+	            resultService.getStudentResults(student.getEmail());
+
+	    model.addAttribute("results", results);
 
 	    return "student/student-profile";
 	}

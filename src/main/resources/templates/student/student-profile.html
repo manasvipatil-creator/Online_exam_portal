@@ -126,13 +126,27 @@
 										</div>
                                             <div class="col-md-6">
                                                 <label class="form-label fw-semibold text-dark">Department / Course</label>
-                                                <select class="form-select py-2.5 rounded-3">
-                                                    <option selected>Computer Science & Engineering</option>
-                                                    <option>Electronics & Communication</option>
-                                                    <option>Mechanical Engineering</option>
-                                                    <option>Information Technology</option>
-                                                </select>
-                                            </div>
+										<select class="form-select py-2.5 rounded-3"
+										        name="department"
+										        th:value="${student.department}">
+										
+										    <option value="Computer Science & Engineering">
+										        Computer Science & Engineering
+										    </option>
+										
+										    <option value="Electronics & Communication">
+										        Electronics & Communication
+										    </option>
+										
+										    <option value="Mechanical Engineering">
+										        Mechanical Engineering
+										    </option>
+										
+										    <option value="Information Technology">
+										        Information Technology
+										    </option>
+										
+										</select>                                            </div>
                                             <div class="col-12 mt-4 text-end">
                                                 <button type="submit" class="btn btn-primary px-4 py-2.5 rounded-3 fw-semibold">
                                                     Save Changes <i class="fas fa-save ms-1"></i>
@@ -190,48 +204,46 @@
                                                     <th>Status</th>
                                                 </tr>
                                             </thead>
-                                            <tbody style="font-size: 0.9rem;">
-                                                <!-- Dynamic loops fallbacks -->
-                                                <tr th:each="hist : ${historyLog}">
-                                                    <td class="fw-semibold text-primary" th:text="${hist.code}">CS-101</td>
-                                                    <td class="fw-bold text-dark" th:text="${hist.name}">Introduction to Java</td>
-                                                    <td th:text="${hist.date}">2026-05-28</td>
-                                                    <td th:text="${hist.scoreString}">45 / 50</td>
-                                                    <td>
-                                                        <span class="badge bg-success-light text-success rounded-pill px-2.5 py-1" th:if="${hist.passed}">Passed</span>
-                                                        <span class="badge bg-danger-light text-danger rounded-pill px-2.5 py-1" th:unless="${hist.passed}">Failed</span>
-                                                    </td>
-                                                </tr>
-                                                <!-- Fallback Mock Logs -->
-                                                <tr th:if="${historyLog == null}">
-                                                    <td class="fw-semibold text-primary">CS-402</td>
-                                                    <td class="fw-bold text-dark">Core Java Programming</td>
-                                                    <td>May 28, 2026</td>
-                                                    <td>45 / 50 (90%)</td>
-                                                    <td><span class="badge bg-success-light text-success rounded-pill px-2.5 py-1">Passed</span></td>
-                                                </tr>
-                                                <tr th:if="${historyLog == null}">
-                                                    <td class="fw-semibold text-primary">DB-301</td>
-                                                    <td class="fw-bold text-dark">SQL Queries & DB Administration</td>
-                                                    <td>May 20, 2026</td>
-                                                    <td>36 / 50 (72%)</td>
-                                                    <td><span class="badge bg-success-light text-success rounded-pill px-2.5 py-1">Passed</span></td>
-                                                </tr>
-                                                <tr th:if="${historyLog == null}">
-                                                    <td class="fw-semibold text-primary">CS-205</td>
-                                                    <td class="fw-bold text-dark">Data Structures & Algorithms</td>
-                                                    <td>May 10, 2026</td>
-                                                    <td>21 / 50 (42%)</td>
-                                                    <td><span class="badge bg-danger-light text-danger rounded-pill px-2.5 py-1">Failed</span></td>
-                                                </tr>
-                                                <tr th:if="${historyLog == null}">
-                                                    <td class="fw-semibold text-primary">QT-101</td>
-                                                    <td class="fw-bold text-dark">Logical Aptitude & Maths</td>
-                                                    <td>April 18, 2026</td>
-                                                    <td>48 / 50 (96%)</td>
-                                                    <td><span class="badge bg-success-light text-success rounded-pill px-2.5 py-1">Passed</span></td>
-                                                </tr>
-                                            </tbody>
+                                          <tbody>
+										    <tr th:each="res : ${results}">
+										        
+										        <td th:text="${res.examName}">
+										            Exam Name
+										        </td>
+										
+										        <td th:text="${res.date}">
+										            Date
+										        </td>
+										
+										        <td th:text="${res.scoreString}">
+										            10/10
+										        </td>
+										
+										        <td th:text="${res.percent + '%'}">
+										            100%
+										        </td>
+										
+										        <td>
+										            <span th:if="${res.passed}"
+										                  class="badge bg-success">
+										                Passed
+										            </span>
+										
+										            <span th:unless="${res.passed}"
+										                  class="badge bg-danger">
+										                Failed
+										            </span>
+										        </td>
+										
+										    </tr>
+										
+										    <tr th:if="${#lists.isEmpty(results)}">
+										        <td colspan="5"
+										            class="text-center text-muted">
+										            No exam history available.
+										        </td>
+										    </tr>
+										</tbody>
                                         </table>
                                     </div>
                                 </div>

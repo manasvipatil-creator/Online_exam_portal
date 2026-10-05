@@ -31,6 +31,25 @@ public class ResultService {
                 .toList();
     }
     
+    public long getAttemptedExamCount(String email) {
+
+        List<Result> results =
+                resultRepository.findByStudentEmailOrderByIdDesc(email);
+
+        return results.stream()
+                .map(Result::getExamName)
+                .filter(name -> name != null && !name.isBlank())
+                .distinct()
+                .count();
+    }
+    
+    public Result getResultById(int id) {
+
+        return resultRepository.findById(id)
+                .orElse(null);
+    }
+    
+    
     public void saveResult(Result result) {
 
         resultRepository.save(result);

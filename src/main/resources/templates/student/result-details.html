@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Result Details - Online Exam Portal</title>
+
+    <!-- Same Dashboard Styles -->
+    <th:block th:replace="~{fragments/footer :: styles}"></th:block>
+
+</head>
+
+
+<body>
+
+<div class="dashboard-wrapper">
+
+    <!-- ========================= -->
+    <!-- SIDEBAR -->
+    <!-- ========================= -->
+
+    <div th:replace="~{fragments/navbar :: student-sidebar('dashboard')}"></div>
+
+
+    <!-- ========================= -->
+    <!-- MAIN CONTENT -->
+    <!-- ========================= -->
+
+    <div class="main-content">
+
+
+        <!-- ========================= -->
+        <!-- TOP NAVBAR -->
+        <!-- ========================= -->
+
+        <header
+            th:replace="~{fragments/navbar :: dashboard-header('Result Details')}">
+        </header>
+
+
+        <!-- ========================= -->
+        <!-- CONTENT -->
+        <!-- ========================= -->
+
+        <div class="content-body">
+
+
+            <!-- Page Header -->
+
+            <div class="d-flex
+                        justify-content-between
+                        align-items-center
+                        mb-4">
+
+                <div>
+
+                    <h3 class="fw-bold text-dark mb-1">
+                        Result Details
+                    </h3>
+
+                    <p class="text-gray-500 mb-0">
+                        View details of your examination attempt
+                    </p>
+
+                </div>
+
+
+                <a th:href="@{/student/results}"
+                   class="btn btn-light">
+
+                    <i class="fas fa-arrow-left me-1"></i>
+
+                    Back to Results
+
+                </a>
+
+            </div>
+
+
+            <!-- ========================= -->
+            <!-- RESULT CARD -->
+            <!-- ========================= -->
+
+            <div class="card card-premium
+                        border-0 p-4">
+
+
+                <!-- Exam Name -->
+
+                <div class="mb-4">
+
+                    <small class="text-gray-500">
+                        Examination
+                    </small>
+
+                    <h4 class="fw-bold text-dark mb-0"
+                        th:text="${result.examName}">
+
+                        Core Java Test
+
+                    </h4>
+
+                </div>
+
+
+                <!-- Statistics -->
+
+                <div class="row g-4">
+
+
+                    <!-- Score -->
+
+                    <div class="col-md-4">
+
+                        <div class="stat-card">
+
+                            <div>
+
+                                <small class="text-gray-500
+                                              fw-semibold
+                                              d-block
+                                              uppercase">
+
+                                    Score
+
+                                </small>
+
+                                <h3 class="fw-bold
+                                           mb-0
+                                           text-dark"
+                                    th:text="${result.scoreString}">
+
+                                    12 / 14
+
+                                </h3>
+
+                            </div>
+
+
+                            <div class="icon-box
+                                        icon-box-primary">
+
+                                <i class="fas fa-star"></i>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Percentage -->
+
+                    <div class="col-md-4">
+
+                        <div class="stat-card">
+
+                            <div>
+
+                                <small class="text-gray-500
+                                              fw-semibold
+                                              d-block
+                                              uppercase">
+
+                                    Percentage
+
+                                </small>
+
+                                <h3 class="fw-bold
+                                           mb-0
+                                           text-dark"
+                                    th:text="${result.percent}">
+
+                                    86%
+
+                                </h3>
+
+                            </div>
+
+
+                            <div class="icon-box
+                                        icon-box-secondary">
+
+                                <i class="fas fa-chart-line"></i>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Status -->
+
+                    <div class="col-md-4">
+
+                        <div class="stat-card">
+
+                            <div>
+
+                                <small class="text-gray-500
+                                              fw-semibold
+                                              d-block
+                                              uppercase">
+
+                                    Status
+
+                                </small>
+
+
+                                <h3 th:if="${result.passed}"
+                                    class="fw-bold
+                                           mb-0
+                                           text-success">
+
+                                    PASSED
+
+                                </h3>
+
+
+                                <h3 th:unless="${result.passed}"
+                                    class="fw-bold
+                                           mb-0
+                                           text-danger">
+
+                                    FAILED
+
+                                </h3>
+
+                            </div>
+
+
+                            <div class="icon-box
+                                        icon-box-success">
+
+                                <i class="fas fa-award"></i>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- ========================= -->
+                <!-- ADDITIONAL INFORMATION -->
+                <!-- ========================= -->
+
+                <div class="mt-4 pt-4 border-top">
+
+                    <h5 class="fw-bold text-dark mb-4">
+
+                        Examination Information
+
+                    </h5>
+
+
+                    <div class="row g-4">
+
+
+                        <!-- Student Name -->
+
+                        <div class="col-md-6">
+
+                            <small class="text-gray-500 d-block">
+                                Student Name
+                            </small>
+
+                            <span class="fw-semibold text-dark"
+                                  th:text="${result.studentName}">
+
+                                Manasvi Patil
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- Email -->
+
+                        <div class="col-md-6">
+
+                            <small class="text-gray-500 d-block">
+                                Student Email
+                            </small>
+
+                            <span class="fw-semibold text-dark"
+                                  th:text="${result.studentEmail}">
+
+                                student@example.com
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- Exam Date -->
+
+                        <div class="col-md-6">
+
+                            <small class="text-gray-500 d-block">
+                                Attempt Date
+                            </small>
+
+                            <span class="fw-semibold text-dark"
+                                  th:text="${result.date}">
+
+                                2026-09-28
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- Result Status -->
+
+                        <div class="col-md-6">
+
+                            <small class="text-gray-500 d-block">
+                                Result Status
+                            </small>
+
+
+                            <span th:if="${result.passed}"
+                                  class="badge
+                                         bg-success-light
+                                         text-success
+                                         rounded-pill
+                                         px-3 py-2">
+
+                                Passed
+
+                            </span>
+
+
+                            <span th:unless="${result.passed}"
+                                  class="badge
+                                         bg-danger-light
+                                         text-danger
+                                         rounded-pill
+                                         px-3 py-2">
+
+                                Failed
+
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Same Dashboard Scripts -->
+
+<th:block th:replace="~{fragments/footer :: scripts}"></th:block>
+
+
+</body>
+
+</html>

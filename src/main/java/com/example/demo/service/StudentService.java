@@ -79,5 +79,65 @@ public class StudentService {
 		        studentRepository.save(student);
 		    }
 		}
+	 
+	 public boolean updateStudentProfile(
+		        int id,
+		        String fullName,
+		        String mobileNumber,
+		        String department) {
+
+		    Student student =
+		            studentRepository.findById(id).orElse(null);
+
+		    if (student != null) {
+
+		        student.setFullName(fullName);
+
+		        student.setMobileNumber(mobileNumber);
+
+		        student.setDepartment(department);
+
+		        studentRepository.save(student);
+
+		        return true;
+		    }
+
+		    return false;
+		}
+	 
+	 public String changeStudentPassword(
+		        int studentId,
+		        String currentPassword,
+		        String newPassword,
+		        String confirmNewPassword) {
+
+		    Student student =
+		            studentRepository.findById(studentId)
+		                    .orElse(null);
+
+		    if (student == null) {
+		        return "Student not found.";
+		    }
+
+		    if (!student.getPassword().equals(currentPassword)) {
+		        return "Current password is incorrect.";
+		    }
+
+		    if (!newPassword.equals(confirmNewPassword)) {
+		        return "New passwords do not match.";
+		    }
+
+		    if (newPassword.length() < 6) {
+		        return "Password must be at least 6 characters.";
+		    }
+
+		    student.setPassword(newPassword);
+
+		    studentRepository.save(student);
+
+		    return "SUCCESS";
+		}
 }
+
+
 
