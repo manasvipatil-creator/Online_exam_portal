@@ -274,6 +274,89 @@
                             </div>
 
                         </div>
+                        
+                        <!-- ================================
+     EXAM HISTORY
+================================= -->
+
+<div class="p-4 border-top">
+
+    <h5 class="fw-bold mb-3">
+        <i class="fas fa-file-alt me-2 text-primary"></i>
+        Exam History
+    </h5>
+
+    <!-- No Attempted Exams -->
+    <div th:if="${#lists.isEmpty(attemptedExams)}"
+         class="alert alert-info mb-0">
+        <i class="fas fa-info-circle me-2"></i>
+        This student has not attempted any exam yet.
+    </div>
+
+    <!-- Attempted Exams -->
+    <div th:if="${!#lists.isEmpty(attemptedExams)}"
+         class="table-responsive">
+
+        <table class="table table-bordered align-middle mb-0">
+
+            <thead class="table-light">
+                <tr>
+                    <th>Exam Name</th>
+                    <th>Subject</th>
+                    <th>Duration</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr th:each="exam : ${attemptedExams}">
+
+                    <!-- Exam Name -->
+                    <td>
+                        <strong th:text="${exam.examName}">
+                            Java Exam
+                        </strong>
+                    </td>
+
+                    <!-- Subject -->
+                    <td th:text="${exam.subject}">
+                        Java
+                    </td>
+
+                    <!-- Duration -->
+                    <td>
+                        <span th:text="${exam.duration}">
+                            60
+                        </span>
+                        Minutes
+                    </td>
+
+                    <!-- Allow Retake -->
+                    <td>
+
+                        <a th:href="@{/admin/allow-retake/{studentId}/{examId}
+                                      (studentId=${student.id},
+                                       examId=${exam.id})}"
+                           class="btn btn-warning btn-sm"
+                           onclick="return confirm('Are you sure you want to allow retake for this exam?');">
+
+                            <i class="fas fa-redo me-1"></i>
+                            Allow Retake
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
 
 
                         <!-- ================================

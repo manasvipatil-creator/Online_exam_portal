@@ -9,68 +9,253 @@
 </head>
 <body>
 
-    <div class="dashboard-wrapper">
-        <!-- Sidebar Navigation (Active: 'exams') -->
-        <div th:replace="~{fragments/navbar :: student-sidebar('exams')}"></div>
-        
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Dashboard Header -->
-            <header th:replace="~{fragments/navbar :: dashboard-header('Available Examinations')}"></header>
-            
-            <div class="content-body">
-                <!-- Page Top Description -->
-                <div class="row align-items-center mb-4">
-                    <div class="col-md-6">
-                        <h4 class="fw-bold text-dark mb-1">Active Question Sets</h4>
-                        <p class="text-gray-500 mb-0" style="font-size: 0.9rem;">Select an exam below and click start. Please read instructions carefully before starting.</p>
-                    </div>
-                    <div class="col-md-6 text-md-end mt-2 mt-md-0">
-                        <div class="btn-group rounded-3" role="group">
-                         <button type="button"
-						        class="btn btn-primary btn-sm px-3 filter-btn active"
-						        onclick="filterExams('All', this)">
-						    All
-						</button>
-						
-						<button type="button"
-						        class="btn btn-light btn-sm px-3 filter-btn"
-						        onclick="filterExams('Technical', this)">
-						    Technical
-						</button>
-						
-						<button type="button"
-						        class="btn btn-light btn-sm px-3 filter-btn"
-						        onclick="filterExams('Database', this)">
-						    Database
-						</button>
-						
-						<button type="button"
-						        class="btn btn-light btn-sm px-3 filter-btn"
-						        onclick="filterExams('Aptitude', this)">
-						    Aptitude
-						</button>
-                        </div>
-                    </div>
+
+   <div class="dashboard-wrapper">
+
+    <!-- Sidebar Navigation -->
+    <div th:replace="~{fragments/navbar :: student-sidebar('exams')}"></div>
+
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <!-- Dashboard Header -->
+        <header th:replace="~{fragments/navbar :: dashboard-header('Available Examinations')}"></header>
+
+
+        <!-- Content Body -->
+        <div class="content-body">
+
+
+            <!-- Already Attempted Message -->
+            <div th:if="${alreadyAttempted}"
+                 class="alert alert-warning alert-dismissible fade show mb-4 w-100"
+                 role="alert">
+
+                <strong>⚠️ Already Attempted!</strong>
+                You have already attempted this exam.
+                You cannot attempt it again.
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert">
+                </button>
+
+            </div>
+
+
+            <!-- Page Top Description -->
+            <div class="row align-items-center mb-4">
+
+                <!-- Left Side -->
+                <div class="col-md-6">
+
+                    <h4 class="fw-bold text-dark mb-1">
+                        Active Question Sets
+                    </h4>
+
+                    <p class="text-gray-500 mb-0"
+                       style="font-size: 0.9rem;">
+                        Select an exam below and click start.
+                        Please read instructions carefully before starting.
+                    </p>
+
                 </div>
-                
-                
-               
-			                <div id="noExamsMessage"
-			     class="text-center py-5"
-			     style="display:none;">
-			    
-			    <i class="fas fa-file-alt fa-3x text-secondary mb-3"></i>
-			
-			    <h4 class="fw-bold text-dark">
-			        No Exams Available
-			    </h4>
-			
-			    <p class="text-muted">
-			        No examinations found in this category.
-			    </p>
-			
-			</div>
+
+
+                <!-- Category Filters -->
+                <div class="col-md-6 text-md-end mt-2 mt-md-0">
+
+                    <div class="btn-group rounded-3"
+                         role="group">
+
+                        <button type="button"
+                                class="btn btn-primary btn-sm px-3 filter-btn active"
+                                onclick="filterExams('All', this)">
+                            All
+                        </button>
+
+
+                        <button type="button"
+                                class="btn btn-light btn-sm px-3 filter-btn"
+                                onclick="filterExams('Technical', this)">
+                            Technical
+                        </button>
+
+
+                        <button type="button"
+                                class="btn btn-light btn-sm px-3 filter-btn"
+                                onclick="filterExams('Database', this)">
+                            Database
+                        </button>
+
+
+                        <button type="button"
+                                class="btn btn-light btn-sm px-3 filter-btn"
+                                onclick="filterExams('Aptitude', this)">
+                            Aptitude
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- No Exams Message -->
+            <div id="noExamsMessage"
+                 class="text-center py-5"
+                 style="display:none;">
+
+                <i class="fas fa-file-alt fa-3x text-secondary mb-3"></i>
+
+                <h4 class="fw-bold text-dark">
+                    No Exams Available
+                </h4>
+
+                <p class="text-muted">
+                    No examinations found in this category.
+                </p>
+
+            </div>
+
+
+            <!-- Exams Cards Grid -->
+            <div class="row g-4">
+
+                <!-- Dynamic Exam Cards -->
+                <div class="col-md-6 col-xl-4 exam-card"
+                     th:each="exam : ${examList}"
+                     th:attr="data-category=${exam.subject}">
+
+                    <div class="card card-premium h-100 border-0">
+
+                        <div class="p-4 d-flex flex-column h-100">
+
+
+                            <!-- Subject + Duration -->
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+
+                                <span class="badge bg-primary-light text-primary rounded-pill px-3 py-1-5 fw-semibold"
+                                      th:text="${exam.subject}">
+                                    Technical
+                                </span>
+
+
+                                <span class="badge bg-light text-gray-500 rounded-pill px-2-5 py-1"
+                                      style="font-size: 0.75rem;">
+
+                                    <i class="far fa-clock me-1"></i>
+
+                                    <span th:text="${exam.duration}">
+                                        45
+                                    </span>
+
+                                    Mins
+
+                                </span>
+
+                            </div>
+
+
+                            <!-- Exam Name -->
+                            <h5 class="fw-bold text-dark mb-2"
+                                th:text="${exam.examName}">
+                                Core Java Foundation
+                            </h5>
+
+
+                            <!-- Description -->
+                            <p class="text-gray-400 mb-4 flex-grow-1"
+                               style="font-size: 0.85rem; line-height: 1.5;"
+                               th:text="${exam.description}">
+
+                                Assessment covers Object-Oriented programming
+                                principles, collections, exceptions, streams
+                                and fundamental syntax queries.
+
+                            </p>
+
+
+                            <!-- Exam Information -->
+                            <div class="row g-2 border-top border-gray-100 pt-3 mb-4"
+                                 style="font-size: 0.85rem;">
+
+                                <div class="col-6">
+
+                                    <span class="text-gray-500 d-block">
+                                        Total Questions
+                                    </span>
+
+                                    <span class="fw-bold text-dark"
+                                          th:text="${exam.totalMarks}">
+                                        30 Qs
+                                    </span>
+
+                                </div>
+
+
+                                <div class="col-6">
+
+                                    <span class="text-gray-500 d-block">
+                                        Passing Score
+                                    </span>
+
+                                    <span class="fw-bold text-dark">
+                                        40%
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Exam Button -->
+                            <div>
+
+                                <!-- Already Attempted -->
+                                <button type="button"
+                                        th:if="${completedExamIds.contains(exam.id)}"
+                                        class="btn btn-secondary w-100 py-2-5 rounded-3 fw-semibold"
+                                        disabled>
+
+                                    <i class="fas fa-check-circle me-1"></i>
+                                    Already Attempted
+
+                                </button>
+
+
+                                <!-- Start / Resume Exam -->
+                                <a th:unless="${completedExamIds.contains(exam.id)}"
+                                   th:href="@{/student/exam/begin/{id}(id=${exam.id})}"
+                                   class="btn btn-primary w-100 py-2-5 rounded-3 fw-semibold">
+
+                                    Start Examination
+
+                                    <i class="fas fa-play ms-1"
+                                       style="font-size: 0.8rem;">
+                                    </i>
+
+                                </a>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
 			                
                 <!-- Exams Cards Grid -->
                 <div class="row g-4">

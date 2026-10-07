@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.example.demo.entity.Exam;
+import com.example.demo.entity.ExamAttempt;
 import com.example.demo.entity.Question;
 import com.example.demo.entity.Result;
 import com.example.demo.entity.Student;
@@ -21,7 +22,9 @@ import com.example.demo.service.QuestionService;
 import com.example.demo.service.ResultService;
 import com.example.demo.service.StudentAnswerService;
 import com.example.demo.service.StudentService;
-import com.example.demo.entity.Result;
+import com.example.demo.service.ExamAttemptService;
+import java.util.Optional;
+
 
 import jakarta.servlet.http.HttpSession;
 
@@ -44,6 +47,9 @@ public class StudentController {
 	
 	@Autowired
 	private ResultService resultService;
+	
+	@Autowired
+	private ExamAttemptService examAttemptService;
 	
 	//register page open karnyasathi
 	@GetMapping("/student/register")
@@ -142,21 +148,58 @@ public class StudentController {
 	}
 	
 	@GetMapping("/student/exams")
-	public String availableExams(Model model) {
+	public String availableExams(
+	        @RequestParam(required = false) String alreadyAttempted,
+	        HttpSession session,
+	        Model model) {
+
+	    Student student =
+	            (Student) session.getAttribute("student");
+
+	    if (student == null) {
+	        return "redirect:/student/login";
+	    }
 
 	    List<Exam> exams =
 	            examService.getAllExams();
 
-	    System.out.println(
-	            "TOTAL EXAMS = " + exams.size());
+	    // Store IDs of exams already completed by this student
+	    Set<Integer> completedExamIds = new HashSet<>();
+
+	    for (Exam exam : exams) {
+
+	        Optional<ExamAttempt> attempt =
+	                examAttemptService.getAttempt(
+	                        student.getId(),
+	                        exam.getId()
+	                );
+
+	        if (attempt.isPresent()
+	                && "COMPLETED".equals(
+	                        attempt.get().getStatus())) {
+
+	            completedExamIds.add(exam.getId());
+	        }
+	    }
 
 	    model.addAttribute(
 	            "examList",
 	            exams);
 
+	    model.addAttribute(
+	            "completedExamIds",
+	            completedExamIds);
+
+	    if ("true".equals(alreadyAttempted)) {
+	        model.addAttribute(
+	                "alreadyAttempted",
+	                true);
+	    }
+
 	    return "student/exam-list";
 	}
-
+	
+	
 	@GetMapping("/student/exam/start/{id}/{index}")
 	public String startExam(@PathVariable int id,
 	                        @PathVariable int index,
@@ -455,6 +498,19 @@ public class StudentController {
 
 	    resultService.saveResult(result);
 
+	    
+	 // Mark exam attempt as COMPLETED
+	    Optional<ExamAttempt> existingAttempt =
+	            examAttemptService.getAttempt(
+	                    student.getId(),
+	                    examId
+	            );
+
+	    if (existingAttempt.isPresent()) {
+	        examAttemptService.completeAttempt(
+	                existingAttempt.get()
+	        );
+	    }
 
 	    // ==============================
 	    // Send Data To Result Page
@@ -520,31 +576,123 @@ public class StudentController {
 	    Student student =
 	            (Student) session.getAttribute("student");
 
-	    if(student == null) {
+	    if (student == null) {
 	        return "redirect:/student/login";
 	    }
 
-	    // Clear previous answers
-	    studentAnswerService.clearExamAnswers(
-	            student.getId(), id);
+	    // Get exam
+	    Exam exam = examService.getExamById(id);
 
-	    // Get latest exam from database
-	    Exam exam =
-	            examService.getExamById(id);
+	    if (exam == null) {
+	        return "redirect:/student/exams";
+	    }
 
-	    // Start NEW timer
+	    // Check existing attempt
+	    Optional<ExamAttempt> existingAttempt =
+	            examAttemptService.getAttempt(
+	                    student.getId(),
+	                    id
+	            );
+
+	    // Already completed
+	    if (existingAttempt.isPresent()
+	            && "COMPLETED".equals(
+	                    existingAttempt.get().getStatus())) {
+
+	    	return "redirect:/student/exams?alreadyAttempted=true";
+	    }
+
+	    // Existing exam is still in progress
+	    if (existingAttempt.isPresent()
+	            && "IN_PROGRESS".equals(
+	                    existingAttempt.get().getStatus())) {
+
+	        // Use old timer
+	        session.setAttribute(
+	                "examEndTime_" + id,
+	                existingAttempt.get().getEndTime()
+	        );
+
+	        // Resume exam
+	        return "redirect:/student/exam/start/"
+	                + id + "/0";
+	    }
+	    
+	 // =========================
+	 // RETAKE ALLOWED
+	 // =========================
+	 if (existingAttempt.isPresent()
+	         && "RETAKE_ALLOWED".equals(
+	                 existingAttempt.get().getStatus())) {
+
+	     long startTime =
+	             System.currentTimeMillis();
+
+	     long endTime =
+	             startTime
+	             + (exam.getDuration() * 60L * 1000L);
+
+	     // Start retake
+	     examAttemptService.startRetake(
+	             existingAttempt.get(),
+	             startTime,
+	             endTime
+	     );
+
+	     // Save new timer
+	     session.setAttribute(
+	             "examEndTime_" + id,
+	             endTime
+	     );
+
+	     // Clear previous attempt answers
+	     studentAnswerService.clearExamAnswers(
+	             student.getId(),
+	             id
+	     );
+
+	     // Start exam again
+	     return "redirect:/student/exam/start/"
+	             + id + "/0";
+	 }
+	    
+	    
+
+	    // =========================
+	    // NEW EXAM ATTEMPT
+	    // =========================
+
+	    long startTime =
+	            System.currentTimeMillis();
+
 	    long endTime =
-	            System.currentTimeMillis()
+	            startTime
 	            + (exam.getDuration() * 60L * 1000L);
 
-	    // Save timer end time in session
+	    // Create new attempt
+	    examAttemptService.createAttempt(
+	            student.getId(),
+	            id,
+	            startTime,
+	            endTime
+	    );
+
+	    // Save timer
 	    session.setAttribute(
 	            "examEndTime_" + id,
-	            endTime);
+	            endTime
+	    );
+
+	    // Clear old answers ONLY for new attempt
+	    studentAnswerService.clearExamAnswers(
+	            student.getId(),
+	            id
+	    );
 
 	    return "redirect:/student/exam/start/"
 	            + id + "/0";
 	}
+	
 	
 	@PostMapping("/student/exam/save")
 	public String saveAnswer(

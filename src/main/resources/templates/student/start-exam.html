@@ -323,28 +323,45 @@
     </div>
 
     <!-- Scripts Fragment -->
-    <th:block th:replace="~{fragments/footer :: scripts}"></th:block>
-    
-    <script>
-document.querySelector("form[action*='mark-review']")
-    ?.addEventListener("submit", function () {
+ <th:block th:replace="~{fragments/footer :: scripts}"></th:block>
 
-        const selected = document.querySelector(
-            'input[name="selectedAnswer"]:checked'
-        );
 
-        if (selected) {
-            document.getElementById("reviewSelectedAnswer").value =
-                selected.value;
-        }
-    });
-</script>
+<!-- ==========================================
+     MARK FOR REVIEW SCRIPT
+========================================== -->
+
 <script>
+
+    document.querySelector("form[action*='mark-review']")
+        ?.addEventListener("submit", function () {
+
+            const selected = document.querySelector(
+                'input[name="selectedAnswer"]:checked'
+            );
+
+            if (selected) {
+                document.getElementById("reviewSelectedAnswer").value =
+                    selected.value;
+            }
+
+        });
+
+</script>
+
+
+<!-- ==========================================
+     EXAM TIMER
+========================================== -->
+
+<script>
+
     const timerElement = document.getElementById("exam-timer");
 
     let totalSeconds =
         parseInt(timerElement.dataset.remaining);
-    
+
+    let timer;
+
     function updateTimer() {
 
         let minutes = Math.floor(totalSeconds / 60);
@@ -354,21 +371,92 @@ document.querySelector("form[action*='mark-review']")
             String(minutes).padStart(2, '0') + ":" +
             String(seconds).padStart(2, '0');
 
+
+        // Timer finished
         if (totalSeconds <= 0) {
+
             clearInterval(timer);
 
-            alert("Time is over! Your exam will be submitted.");
+            alert(
+                "Time is over! Your exam will be submitted."
+            );
 
             document.getElementById("examForm").submit();
+
             return;
         }
 
         totalSeconds--;
+
     }
 
+    // Show timer immediately
     updateTimer();
 
-    const timer = setInterval(updateTimer, 1000);
+    // Start timer
+    timer = setInterval(updateTimer, 1000);
+
 </script>
+
+
+<!-- ==========================================
+     EXAM BACK BUTTON PROTECTION
+========================================== -->
+
+<!-- ==========================================
+     EXAM BACK BUTTON PROTECTION
+========================================== -->
+
+<script>
+
+    let restoringHistory = false;
+
+    // Add one history entry for the exam page
+    history.pushState(
+        { examGuard: true },
+        "",
+        location.href
+    );
+
+
+    window.addEventListener("popstate", function () {
+
+        // This popstate is caused by history.go(1)
+        // while restoring the exam page
+        if (restoringHistory) {
+
+            restoringHistory = false;
+
+            return;
+        }
+
+
+        // Show warning every time browser Back is clicked
+        const leaveExam = confirm(
+            "Your exam is currently in progress.\n\n" +
+            "If you leave this page, your exam progress may be affected.\n\n" +
+            "Do you want to leave the examination?"
+        );
+
+
+        if (leaveExam) {
+
+            // User clicked OK
+            window.location.href = "/student/exams";
+
+        } else {
+
+            // User clicked Cancel
+            // Move forward again to the exam page
+            restoringHistory = true;
+
+            history.go(1);
+        }
+
+    });
+
+</script>
+
+
 </body>
 </html>

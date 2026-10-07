@@ -3,12 +3,19 @@ import com.example.demo.service.ExamService;
 import com.example.demo.service.QuestionService;
 import com.example.demo.entity.Admin;
 import com.example.demo.entity.Exam;
-
+import com.example.demo.entity.ExamAttempt;
+import com.example.demo.entity.Student;
+import com.example.demo.service.ExamAttemptService;
 import org.springframework.ui.Model;
 import com.example.demo.service.AdminService;
 import com.example.demo.service.ResultService;
 import com.example.demo.service.StudentService;
 import jakarta.servlet.http.HttpSession;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +40,9 @@ public class AdminController {
 
     @Autowired
     private QuestionService questionService;
+    
+    @Autowired
+    private ExamAttemptService examAttemptService;
     
     
     
@@ -137,14 +147,42 @@ public class AdminController {
             @PathVariable int id,
             Model model) {
 
+        Student student =
+                studentService.getStudentById(id);
+
+        model.addAttribute("student", student);
+
+        // Get all exams
+        List<Exam> exams =
+                examService.getAllExams();
+
+        // Exams already attempted by this student
+        List<Exam> attemptedExams =
+                new ArrayList<>();
+
+        for (Exam exam : exams) {
+
+            Optional<ExamAttempt> attempt =
+                    examAttemptService.getAttempt(
+                            student.getId(),
+                            exam.getId()
+                    );
+
+            if (attempt.isPresent()
+                    && "COMPLETED".equals(
+                            attempt.get().getStatus())) {
+
+                attemptedExams.add(exam);
+            }
+        }
+
         model.addAttribute(
-                "student",
-                studentService.getStudentById(id));
+                "attemptedExams",
+                attemptedExams
+        );
 
         return "admin/student-details";
     }
-    
-    
     
     @GetMapping("/admin/students/delete/{id}")
     public String deleteStudent(
@@ -196,6 +234,19 @@ public class AdminController {
         	);
         
         return "admin/manage-results";
+    }
+    
+    @GetMapping("/admin/allow-retake/{studentId}/{examId}")
+    public String allowRetake(
+            @PathVariable int studentId,
+            @PathVariable int examId) {
+
+        examAttemptService.allowRetake(
+                studentId,
+                examId
+        );
+
+        return "redirect:/admin/manage-students";
     }
 
 
