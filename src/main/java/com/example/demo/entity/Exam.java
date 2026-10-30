@@ -14,8 +14,8 @@ public class Exam {
 	private int id;
 	private String examName;
 	private String subject;
-	private int duration;
-	private int totalMarks;
+	private Integer duration;
+	private Integer totalMarks;
 	
 	private String description;
 
@@ -39,20 +39,21 @@ public class Exam {
 	public void setSubject(String subject) {
 		this.subject = subject;
 	}
-	public int getDuration() {
-		return duration;
+	public Integer getDuration() {
+	    return duration;
 	}
-	public void setDuration(int duration) {
-		this.duration = duration;
+
+	public void setDuration(Integer duration) {
+	    this.duration = duration;
 	}
-	public int getTotalMarks() {
-		return totalMarks;
+
+	public Integer getTotalMarks() {
+	    return totalMarks;
 	}
-	public void setTotalMarks(int totalMarks) {
-		this.totalMarks = totalMarks;
+
+	public void setTotalMarks(Integer totalMarks) {
+	    this.totalMarks = totalMarks;
 	}
-	
-	
 
 	public String getDescription() {
 	    return description;

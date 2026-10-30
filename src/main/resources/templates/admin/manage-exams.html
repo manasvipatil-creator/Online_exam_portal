@@ -65,17 +65,30 @@
                                     <!-- Duration -->
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label fw-semibold text-dark">Duration (Min)</label>
-                                        <input type="number" class="form-control rounded-3" th:field="*{duration}" placeholder="e.g. 60" required min="5">
+                                       <input type="number"
+									       class="form-control rounded-3"
+									       th:field="*{duration}"
+									       placeholder="e.g. 30"
+									       required
+									       min="5"
+									       th:value="${exam.id == 0 ? '' : exam.duration}">
                                     </div>
                                 </div>
                                 
                                 <div class="row g-2">
                                     <!-- Total Qs -->
-                                    <div class="col-6 mb-3">
-                                        <label class="form-label fw-semibold text-dark">Total Qs</label>
-                                        <input type="number" class="form-control rounded-3" th:field="*{totalMarks}" placeholder="30" required min="1">
-                                    </div>
-                                    
+                                   <div class="col-6 mb-3">
+    <label class="form-label fw-semibold text-dark">
+        Total Marks
+    </label>
+
+    <input type="number"
+           class="form-control rounded-3"
+           th:field="*{totalMarks}"
+           placeholder="e.g. 30"
+           required
+           min="1">
+</div>
                                 </div>
                                 
                                 <!-- Description -->
@@ -103,12 +116,11 @@
                                 <table class="table table-hover align-middle mb-0" style="font-size: 0.9rem;">
                                     <thead class="table-light text-gray-500" style="font-size: 0.85rem;">
                                         <tr>
-                                            <th>Title</th>
-                                            <th>Category</th>
-                                            <th>Duration</th>
-                                            <th>Questions</th>
-                                            <th>Pass Score</th>
-                                            <th>Actions</th>
+                                           <th>Title</th>
+											<th>Category</th>
+											<th>Duration</th>
+											<th>Total Marks</th>
+											<th>Actions</th>
                                         </tr>
                                     </thead>
                               <tbody id="examTableBody">
@@ -132,13 +144,8 @@
         </td>
 
         <td th:text="${ex.totalMarks + ' Marks'}">
-            30 Marks
-        </td>
-
-        <td th:text="${ex.passingScore}">
-            20
-        </td>
-
+    30 Marks
+</td>
         <td>
             <div class="d-flex gap-2">
 

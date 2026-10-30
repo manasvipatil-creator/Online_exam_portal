@@ -76,7 +76,9 @@ public String manageExamTest() {
 @GetMapping("/admin/manage-exams-page")
 public String manageExamPage(Model model) {
 
-    model.addAttribute("exam", new Exam());
+	Exam exam = new Exam();
+
+	exam.setDuration(null);
 
     List<Exam> exams = examService.getAllExams();
 
